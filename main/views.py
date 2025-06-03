@@ -54,9 +54,12 @@ class AnimeList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         search_value = self.request.GET.get('search') or ''
+        
         if search_value:
             context['animes'] = context['animes'].filter(title__icontains=search_value)
+        context['search_value'] = search_value
         return context
+
 
 
 class AnimeDetail(LoginRequiredMixin, DetailView):

@@ -7,14 +7,34 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <title>Inicio</title>
 </head>
-<body class="bg-gray-100 min-h-screen">
-    <header class="bg-blue-500 text-white py-3 h-16">
+<body class="bg-black min-h-screen">
+    <header style="background-color: #11111F;"  class="text-white py-3 h-16">
         <div class="container mx-auto flex justify-between">
             <a href="{% url 'anime_list' %}" class="text-3xl font-bold">TakosuAnime</a>
+
+            <form method="get" class="mb-6">
+                <div class="flex items-center justify-end relative">
+                    <button type="button" id="toggleSearch" class="p-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" class="bi bi-search" viewBox="0 0 16 16">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                        </svg>
+                    </button>
+
+                    <div id="searchContainer" class="ml-2 hidden items-center space-x-1 transition-all duration-300">
+                        <input style="background-color: #11111F;" type="text" name="search" id="searchInput" placeholder="Buscar anime..." class="px-4 py-2 text-white rounded-md focus:outline-none">
+                        <button type="button" id="clearSearch" class="px-2 py-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </form>
+
             <div class="relative">
                 {% if request.user.is_authenticated %}
                     <button id="profileMenuButton" class="inline-block focus:outline-none">
-                        <img src="{{ user.icon.url }}" alt="{{ user.username }}" class="w-12 h-12">
+                        <img src="{{ user.icon.url }}" alt="{{ user.username }}" class="w-12 h-12 rounded-full">
                     </button>
 
                     <div id="profileMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-10">
@@ -38,28 +58,26 @@
     </header>
 
     <main class="container mx-auto py-8">
-        <form method="get" class="mb-6">
-            <div class="flex items-center">
-                <input type="text" name="search" placeholder="Buscar anime..." value="{{search_value}}"
-                    class="flex-grow px-4 py-2 border border-gray-300 rounded-l-md focus:ring-blue-500 focus:border-blue-500">
-                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-r-md">
-                    Buscar
-                </button>
-            </div>
-        </form>
-
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {% for anime in animes %}
-            <a href="{% url 'anime_detail' anime.title %}">
-                <div class="bg-white shadow-md overflow-hidden rounded-sm">
-                    <img src="{{ anime.image.url }}" alt="{{ anime.title }}" class="w-full object-cover">
-                    <div class="p-2">
-                        <h2 class="text-sm font-bold text-center">{{ anime.title }}</h2>
-                        <p class="text-xs text-gray-600 text-center">Episodios: {{ anime.total_episodes }}</p>
+            {% if animes %}
+                {% for anime in animes %}
+                <a href="{% url 'anime_detail' anime.title %}">
+                    <div class="shadow-md overflow-hidden rounded-sm">
+                        <img src="{{ anime.image_card.url }}" alt="{{ anime.title }}" class="w-full object-cover rounded-md">
+                        <div class="p-2">
+                            <h2 class="text-sm font-bold text-center text-white">{{ anime.title }}</h2>
+                            <p class="text-xs text-gray-200 text-center">Episodios: {{ anime.total_episodes }}</p>
+                        </div>
                     </div>
+                </a>
+                {% endfor %}
+            {% else %}
+                <div class="col-span-full  items-center justify-center text-center mt-8">
+                    <h2 class="text-white text-xl font-semibold mb-2">No se encontraron resultados</h2>
+                    <p class="text-gray-400">No hay animes que coincidan con "<strong>{{ search_value }}</strong>"</p>
+                    <a href="{% url 'anime_list' %}" class="inline-block mt-4 text-yellow-400 hover:underline">Volver a ver todos</a>
                 </div>
-            </a>
-            {% endfor %}
+            {% endif %}
         </div>
     </main>
 
@@ -75,6 +93,25 @@
             if (!profileMenuButton.contains(event.target) && !profileMenu.contains(event.target)) {
                 profileMenu.classList.add('hidden');
             }
+        });
+
+        const toggleBtn = document.getElementById('toggleSearch');
+        const searchContainer = document.getElementById('searchContainer');
+        const searchInput = document.getElementById('searchInput');
+        const clearBtn = document.getElementById('clearSearch');
+
+        toggleBtn.addEventListener('click', () => {
+            searchContainer.classList.remove('hidden');
+            searchContainer.classList.add('flex');
+            toggleBtn.classList.add('hidden');
+            setTimeout(() => searchInput.focus(), 100); // auto focus
+        });
+
+        clearBtn.addEventListener('click', () => {
+            searchInput.value = '';
+            searchContainer.classList.remove('flex');
+            searchContainer.classList.add('hidden');
+            toggleBtn.classList.remove('hidden');
         });
     </script>
 </body>

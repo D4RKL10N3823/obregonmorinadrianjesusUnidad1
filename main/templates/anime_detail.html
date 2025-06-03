@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>{{ anime.title }}</h1>
-    <img src="{{ anime.image.url }}" alt="{{anime.title}}" width="250px">
+    <img src="{{ anime.image_detail.url }}" alt="{{anime.title}}" width="250px">
     {% for episode in episodes %}
     <div>
         <a href="{% url 'episode_detail' anime_title=anime.title episode_number=episode.episode_number %}"><img src="{{ episode.image_url.url }}" alt="{{ episode.title }}" width="250px"></a>

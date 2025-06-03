@@ -33,7 +33,8 @@ class User(AbstractUser):
 class Anime(models.Model):
     title = models.CharField(max_length=255, primary_key=True, unique=True)
     description = models.TextField()
-    image = models.ImageField(upload_to=anime_image_upload_path, null=True, blank=True)
+    image_detail = models.ImageField(upload_to=anime_image_upload_path, null=True, blank=True)
+    image_card = models.ImageField(upload_to=anime_image_upload_path, null=True, blank=True)
     release_date = models.DateField()
     genre = models.CharField(max_length=255)
     total_episodes = models.IntegerField()
