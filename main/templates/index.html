@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load form_filters %}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Inicio</title>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <header class="bg-blue-500 text-white py-3 h-16">
+        <div class="container mx-auto flex justify-between">
+            <a href="{% url 'anime_list' %}" class="text-3xl font-bold">TakosuAnime</a>
+            <div class="relative">
+                {% if request.user.is_authenticated %}
+                    <button id="profileMenuButton" class="inline-block focus:outline-none">
+                        <img src="{{ user.icon.url }}" alt="{{ user.username }}" class="w-12 h-12">
+                    </button>
+
+                    <div id="profileMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-10">
+                        <a href="{% url 'update_user' user.id %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                            Perfil
+                        </a>
+                        <form action="{% url 'logout' %}" method="post" class="block">
+                            {% csrf_token %}
+                            <button type="submit" class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                Cerrar Sesión
+                            </button>
+                        </form>
+                    </div>
+                {% else %}
+                <a href="{% url 'login' %}" class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md">
+                    Ingresar
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto py-8">
+        <form method="get" class="mb-6">
+            <div class="flex items-center">
+                <input type="text" name="search" placeholder="Buscar anime..." value="{{search_value}}"
+                    class="flex-grow px-4 py-2 border border-gray-300 rounded-l-md focus:ring-blue-500 focus:border-blue-500">
+                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-r-md">
+                    Buscar
+                </button>
+            </div>
+        </form>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {% for anime in animes %}
+            <a href="{% url 'anime_detail' anime.title %}">
+                <div class="bg-white shadow-md overflow-hidden rounded-sm">
+                    <img src="{{ anime.image.url }}" alt="{{ anime.title }}" class="w-full object-cover">
+                    <div class="p-2">
+                        <h2 class="text-sm font-bold text-center">{{ anime.title }}</h2>
+                        <p class="text-xs text-gray-600 text-center">Episodios: {{ anime.total_episodes }}</p>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </main>
+
+    <script>
+        const profileMenuButton = document.getElementById('profileMenuButton');
+        const profileMenu = document.getElementById('profileMenu');
+    
+        profileMenuButton.addEventListener('click', () => {
+            profileMenu.classList.toggle('hidden');
+        });
+    
+        document.addEventListener('click', (event) => {
+            if (!profileMenuButton.contains(event.target) && !profileMenu.contains(event.target)) {
+                profileMenu.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

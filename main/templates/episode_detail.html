@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Episodio {{ episode.episode_number }} - {{ episode.title }}</title>
+</head>
+<body>
+    <video src="{{ episode.video_url.url }}" controls width="600px" poster="{{ episode.image_url.url }}"></video>
+
+    <h1>Comentarios</h1>
+    <form method="post">
+        {% csrf_token %}
+        <textarea name="content" placeholder="Escribe tu comentario aquí..." required></textarea>
+        <button type="submit">Enviar</button>
+    </form>
+
+    {% for comment in episode.comments.all %}
+        <div class="comment">
+            <p><strong>{{ comment.user.username }}</strong>:</p>
+            <p>{{ comment.content }}</p>
+        </div>
+    {% endfor %}
+</body>
+</html>

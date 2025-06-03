@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ anime.title }}</title>
+</head>
+<body>
+    <h1>{{ anime.title }}</h1>
+    <img src="{{ anime.image.url }}" alt="{{anime.title}}" width="250px">
+    {% for episode in episodes %}
+    <div>
+        <a href="{% url 'episode_detail' anime_title=anime.title episode_number=episode.episode_number %}"><img src="{{ episode.image_url.url }}" alt="{{ episode.title }}" width="250px"></a>
+        <p>E{{ episode.episode_number }} - {{ episode.title }}</p>
+        <p><b>Fecha de lanzamiento:</b> {{ episode.release_date }}</p>
+    </div>
+    {% endfor %}
+</body>
+</html>
