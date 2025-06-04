@@ -30,18 +30,26 @@ class User(AbstractUser):
         return self.username
 
 
+class Category(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Anime(models.Model):
     title = models.CharField(max_length=255, primary_key=True, unique=True)
     description = models.TextField()
     image_detail = models.ImageField(upload_to=anime_image_upload_path, null=True, blank=True)
     image_card = models.ImageField(upload_to=anime_image_upload_path, null=True, blank=True)
     release_date = models.DateField()
-    genre = models.CharField(max_length=255)
     total_episodes = models.IntegerField()
     like_count = models.IntegerField(default=0)
+    categories = models.ManyToManyField(Category, related_name='animes', blank=True)
 
     def __str__(self):
         return self.title
+
 
 
 class Episode(models.Model):

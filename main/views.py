@@ -8,7 +8,7 @@ from django.views.generic.edit import FormView, UpdateView
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Anime, User, Episode, Comment
+from .models import Anime, User, Episode, Comment, Category
 from django.urls import reverse_lazy
 
 
@@ -41,7 +41,7 @@ class Register(FormView):
 
 class UpdateUser(LoginRequiredMixin, UpdateView):
     model = User
-    fields = ['icon']
+    fields = ['icon']   
     template_name = 'update_user.html'
     success_url = reverse_lazy('anime_list')
 
@@ -54,12 +54,16 @@ class AnimeList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         search_value = self.request.GET.get('search') or ''
+        category_name = self.request.GET.get('category')
         
         if search_value:
             context['animes'] = context['animes'].filter(title__icontains=search_value)
-        context['search_value'] = search_value
-        return context
+        if category_name:
+            context['animes'] = context['animes'].filter(categories__name=category_name)
 
+        context['search_value'] = search_value
+        context['categories'] = Category.objects.all()
+        return context
 
 
 class AnimeDetail(LoginRequiredMixin, DetailView):
