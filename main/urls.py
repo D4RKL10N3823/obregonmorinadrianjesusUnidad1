@@ -7,7 +7,7 @@ from .views import AnimeList, AnimeDetail, EpisodeDetail, Login, Register, Updat
 urlpatterns = [
     path('register/', Register.as_view(), name='register'),
     path('login/', Login.as_view(), name='login'),
-    path('logout/', LogoutView.as_view(next_page="login"), name='logout'),
+    path('logout/', LogoutView.as_view(next_page="anime_list"), name='logout'),
     path('update_user/<int:pk>', UpdateUser.as_view(), name='update_user'),
     path('', AnimeList.as_view(), name='anime_list'),
     path('anime/<str:pk>/', AnimeDetail.as_view(), name='anime_detail'),

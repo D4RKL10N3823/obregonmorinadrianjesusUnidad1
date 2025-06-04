@@ -78,9 +78,9 @@
                             </form>
                         </div>
                     {% else %}
-                    <a href="{% url 'login' %}" class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md">
-                        Ingresar
-                    </a>
+                        <a href="{% url 'login' %}" class="text-white py-2 px-4 rounded-md hover:text-yellow-500">Iniciar Sesión</a>
+                        |
+                        <a href="{% url 'register' %}" class="text-white py-2 px-4 rounded-md hover:text-yellow-500">Registrarse</a>
                     {% endif %}
                 </div>
             </div>
@@ -112,7 +112,6 @@
         </div>
     </main>
 
-    <script src="{% static 'js/header.js' %}?v=2"></script>
-
+    <script src="{% static 'js/header.js' %}"></script>
 </body>
 </html>
