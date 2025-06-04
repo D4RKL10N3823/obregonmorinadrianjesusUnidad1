@@ -4,57 +4,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% load form_filters %}
+    {% load static %}
     <script src="https://cdn.tailwindcss.com"></script>
     <title>Inicio</title>
 </head>
 <body class="bg-black min-h-screen">
-    <header style="background-color: #11111F;"  class="text-white py-3 h-16">
-        <div class="container mx-auto flex justify-between">
-            <a href="{% url 'anime_list' %}" class="text-3xl font-bold">TakosuAnime</a>
+    <header style="background-color: #11111F;" class="text-white py-3 h-16">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-end space-x-2">
+                <img src="{% static 'images/logo.png' %}" alt="TakosuAnime" class="h-12">
+            </div>
 
-            <form method="get" class="mb-6">
-                <div class="flex items-center justify-end relative">
-                    <button type="button" id="toggleSearch" class="p-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" class="bi bi-search" viewBox="0 0 16 16">
-                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-                        </svg>
-                    </button>
+            <div class="flex space-x-4">
+                <a href="{% url 'anime_list' %}" class="text-white hover:text-yellow-400">Inicio</a>
+                <a href="#" class="text-white hover:text-yellow-400">Categorias</a>
+            </div>
 
-                    <div id="searchContainer" class="ml-2 hidden items-center space-x-1 transition-all duration-300">
-                        <input style="background-color: #11111F;" type="text" name="search" id="searchInput" placeholder="Buscar anime..." class="px-4 py-2 text-white rounded-md focus:outline-none">
-                        <button type="button" id="clearSearch" class="px-2 py-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="white" class="bi bi-x-lg" viewBox="0 0 16 16">
-                                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+            <div class="flex items-center space-x-4">
+                <form method="get">
+                    <div class="flex items-center relative">
+                        <button type="button" id="toggleSearch" class="text-white h-10 w-10 flex items-center justify-center  hover:text-yellow-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
                             </svg>
                         </button>
-                    </div>
-                </div>
-            </form>
 
-            <div class="relative">
-                {% if request.user.is_authenticated %}
-                    <button id="profileMenuButton" class="inline-block focus:outline-none">
-                        <img src="{{ user.icon.url }}" alt="{{ user.username }}" class="w-12 h-12 rounded-full">
-                    </button>
-
-                    <div id="profileMenu" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-10">
-                        <a href="{% url 'update_user' user.id %}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                            Perfil
-                        </a>
-                        <form action="{% url 'logout' %}" method="post" class="block">
-                            {% csrf_token %}
-                            <button type="submit" class="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                Cerrar Sesión
+                        <div id="searchContainer" class="ml-2 hidden items-center space-x-1 transition-all duration-300">
+                            <input style="background-color: #11111F;" type="text" name="search" id="searchInput" placeholder="Buscar anime..." class="px-4 py-2 text-white rounded-md focus:outline-none">
+                            <button type="button" id="clearSearch" class="text-white px-2 py-1 hover:text-yellow-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1-.708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                                </svg>
                             </button>
-                        </form>
+                        </div>
                     </div>
-                {% else %}
-                <a href="{% url 'login' %}" class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md">
-                    Ingresar
-                </a>
-                {% endif %}
+                </form>
+
+                <div class="relative">
+                    <button class="h-10 px-4 text-white rounded-md hover:text-yellow-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16">
+                            <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="relative">
+                    {% if request.user.is_authenticated %}
+                        <button id="profileMenuButton" class="inline-block focus:outline-none">
+                            <img src="{{ user.icon.url }}" alt="{{ user.username }}" class="w-10 h-10 rounded-full object-cover" />
+                        </button>
+
+                        <div style="background-color: #11111F;" id="profileMenu" class="hidden absolute w-48 rounded-lg shadow-lg py-2 z-10">
+                            <a href="{% url 'update_user' user.id %}" class="block px-4 py-2 text-white hover:text-yellow-500">
+                                Perfil
+                            </a>
+                            <form action="{% url 'logout' %}" method="post" class="block">
+                                {% csrf_token %}
+                                <button type="submit" class="w-full text-left px-4 py-2 text-white hover:text-yellow-500">
+                                    Cerrar Sesión
+                                </button>
+                            </form>
+                        </div>
+                    {% else %}
+                    <a href="{% url 'login' %}" class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md">
+                        Ingresar
+                    </a>
+                    {% endif %}
+                </div>
             </div>
-        </div>
     </header>
 
     <main class="container mx-auto py-8">
@@ -62,11 +79,11 @@
             {% if animes %}
                 {% for anime in animes %}
                 <a href="{% url 'anime_detail' anime.title %}">
-                    <div class="shadow-md overflow-hidden rounded-sm">
-                        <img src="{{ anime.image_card.url }}" alt="{{ anime.title }}" class="w-full object-cover rounded-md">
+                    <div class="shadow-md overflow-hidden">
+                        <img src="{{ anime.image_card.url }}" alt="{{ anime.title }}" class="w-full object-cover rounded-sm">
                         <div class="p-2">
                             <h2 class="text-sm font-bold text-center text-white">{{ anime.title }}</h2>
-                            <p class="text-xs text-gray-200 text-center">Episodios: {{ anime.total_episodes }}</p>
+                            <p class="text-xs text-gray-200 text-center">{{ anime.total_episodes }} Episodios</p>
                         </div>
                     </div>
                 </a>
@@ -75,44 +92,13 @@
                 <div class="col-span-full  items-center justify-center text-center mt-8">
                     <h2 class="text-white text-xl font-semibold mb-2">No se encontraron resultados</h2>
                     <p class="text-gray-400">No hay animes que coincidan con "<strong>{{ search_value }}</strong>"</p>
+                    <img src="{% static 'images/not_found.gif' %}" alt="No results" class="mx-auto mt-4 w-22">
                     <a href="{% url 'anime_list' %}" class="inline-block mt-4 text-yellow-400 hover:underline">Volver a ver todos</a>
                 </div>
             {% endif %}
         </div>
     </main>
 
-    <script>
-        const profileMenuButton = document.getElementById('profileMenuButton');
-        const profileMenu = document.getElementById('profileMenu');
-    
-        profileMenuButton.addEventListener('click', () => {
-            profileMenu.classList.toggle('hidden');
-        });
-    
-        document.addEventListener('click', (event) => {
-            if (!profileMenuButton.contains(event.target) && !profileMenu.contains(event.target)) {
-                profileMenu.classList.add('hidden');
-            }
-        });
-
-        const toggleBtn = document.getElementById('toggleSearch');
-        const searchContainer = document.getElementById('searchContainer');
-        const searchInput = document.getElementById('searchInput');
-        const clearBtn = document.getElementById('clearSearch');
-
-        toggleBtn.addEventListener('click', () => {
-            searchContainer.classList.remove('hidden');
-            searchContainer.classList.add('flex');
-            toggleBtn.classList.add('hidden');
-            setTimeout(() => searchInput.focus(), 100); // auto focus
-        });
-
-        clearBtn.addEventListener('click', () => {
-            searchInput.value = '';
-            searchContainer.classList.remove('flex');
-            searchContainer.classList.add('hidden');
-            toggleBtn.classList.remove('hidden');
-        });
-    </script>
+    <script src="{% static 'js/header.js' %}"></script>
 </body>
 </html>
