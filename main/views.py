@@ -11,7 +11,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Anime, User, Episode, Comment, Category
 from django.urls import reverse_lazy
 
-
 class Login(LoginView):
     model = User
     fields = '__all__'
@@ -22,7 +21,7 @@ class Login(LoginView):
         return reverse_lazy('anime_list')
 
 
-class Register(FormView):
+class Signup(FormView):
     template_name = 'register.html'
     form_class = CustomUserCreationForm
     success_url = reverse_lazy('anime_list')
@@ -31,12 +30,12 @@ class Register(FormView):
         user = form.save()
         if user is not None:
             login(self.request, user)
-        return super(Register, self).form_valid(form)
+        return super(Signup, self).form_valid(form)
     
     def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
             return redirect('anime_list')
-        return super(Register, self).get(*args, **kwargs)
+        return super(Signup, self).get(*args, **kwargs)
     
 
 class UpdateUser(LoginRequiredMixin, UpdateView):

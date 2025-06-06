@@ -6,6 +6,7 @@
     {% load form_filters %}
     {% load static %}
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="{% static 'js/header.js' %}"></script>
     <title>{{ user.username }}</title>
 </head>
 <body class="bg-black min-h-screen">
@@ -72,7 +73,7 @@
                     {% else %}
                         <a href="{% url 'login' %}" class="text-white py-2 px-4 rounded-md hover:text-yellow-500">Iniciar Sesión</a>
                         |
-                        <a href="{% url 'register' %}" class="text-white py-2 px-4 rounded-md hover:text-yellow-500">Registrarse</a>
+                        <a href="{% url 'signup' %}" class="text-white py-2 px-4 rounded-md hover:text-yellow-500">Registrarse</a>
                     {% endif %}
                 </div>
             </div>
@@ -99,6 +100,5 @@
             Actualizar
         </button>
     </form>
-    <script src="{% static 'js/header.js' %}"></script>
 </body>
 </html>

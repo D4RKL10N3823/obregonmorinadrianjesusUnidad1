@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% load static %}
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="{% static 'js/header.js' %}"></script>
     <title>Inicio</title>
 </head>
-<body class="bg-black min-h-screen">
+<body class="bg-black min-h-screen flex flex-col">
     <header style="background-color: #11111F;" class="text-white py-2 h-16">
         <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-8">
@@ -29,6 +30,8 @@
                         {% endfor %}
                     </div>
                 </div>
+
+                <a href="{% url 'anime_list' %}" class="text-white hover:text-yellow-400">Contáctanos</a>
             </div>
 
             <div class="flex items-center space-x-4">
@@ -61,14 +64,14 @@
                     {% else %}
                         <a href="{% url 'login' %}" class="text-white py-2 px-4 rounded-md hover:text-yellow-500">Iniciar Sesión</a>
                         |
-                        <a href="{% url 'register' %}" class="text-white py-2 px-4 rounded-md hover:text-yellow-500">Registrarse</a>
+                        <a href="{% url 'signup' %}" class="text-white py-2 px-4 rounded-md hover:text-yellow-500">Registrarse</a>
                     {% endif %}
                 </div>
             </div>
         </div>
     </header>
 
-    <main class="container mx-auto py-8">
+    <main class="container mx-auto py-8 flex-grow">
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {% if animes %}
                 {% for anime in animes %}
@@ -93,6 +96,49 @@
         </div>
     </main>
 
-    <script src="{% static 'js/header.js' %}"></script>
+    <footer style="background-color: #11111F;" class="text-white py-8">
+        <div class="container mx-auto flex flex-col md:flex-row md:gap-x-20 justify-center items-start text-sm pt-5">
+            <div class="px-2">
+                <span class="font-semibold text-base">Navegación</span>
+                <div class="flex flex-col space-y-1 pt-2">
+                    <a href="{% url 'anime_list' %}" class="hover:text-yellow-400">Inicio</a>
+                    <a href="{%  url 'search' %}" class="hover:text-yellow-400">Buscar</a>
+                </div>
+            </div>
+
+            <div class="px-2">
+                <span class="font-semibold text-base">TakosuAnime</span>
+                <div class="flex flex-col pt-2 space-y-1">
+                    <a href="{% url 'anime_list' %}" class="hover:text-yellow-400">Ayuda</a>
+                    <a href="#" class="hover:text-yellow-400">Buzón</a>
+                    <a href="#" class="hover:text-yellow-400">Contáctanos</a>
+                </div>
+            </div>
+
+            <div class="px-2">
+                <span class="font-semibold text-base">Cuenta</span>
+                <div class="flex flex-col pt-2 space-y-1">
+                {% if request.user.is_authenticated %}
+                    <a href="{% url 'update_user' user.id %}" class="hover:text-yellow-400">Perfil</a>
+                    <form action="{% url 'logout' %}" method="post" class="block">
+                        {% csrf_token %}
+                        <button type="submit" class="text-white hover:text-yellow-500">
+                            Cerrar Sesión
+                        </button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}" class="hover:text-yellow-400">Iniciar Sesión</a>
+                    <a href="{% url 'signup' %}" class="hover:text-yellow-400">Registrarse</a>
+                {% endif%}
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="text-sm text-gray-400 text-center pt-8" >
+            © 2025 TakosuAnime.
+        </div>
+    </footer>
+
 </body>
 </html>
