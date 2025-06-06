@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% load static %}
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>Inicio</title>
+    <script src="{% static 'js/search.js' %}"></script>
+    <title>Search</title>
 </head>
 <body class="bg-black min-h-screen">
     <header style="background-color: #11111F;" class="text-white py-2 h-16">
@@ -68,6 +69,21 @@
         </div>
     </header>
 
+    <form method="get" class="mx-[20%] py-8">
+        <div class="flex justify-end items-center relative">
+            <div id="searchContainer" class="relative w-[95%] transition-all duration-300 ease-in-out">
+                <input type="text" name="search" id="searchInput" placeholder="Buscar anime..." class="bg-transparent text-2xl border-b-2 border-yellow-400 text-white px-4 py-2 pr-10 w-full focus:outline-none transition-all duration-300"/>
+
+                <button type="button" id="clearSearch" class="hidden absolute right-2 top-1/2 transform -translate-y-1/2 text-white hover:text-yellow-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                        <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </form>
+
+    {% if search_value %}
     <main class="container mx-auto py-8">
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {% if animes %}
@@ -92,6 +108,7 @@
             {% endif %}
         </div>
     </main>
+    {% endif %}
 
     <script src="{% static 'js/header.js' %}"></script>
 </body>

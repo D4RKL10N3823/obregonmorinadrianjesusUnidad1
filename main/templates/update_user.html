@@ -9,24 +9,48 @@
     <title>{{ user.username }}</title>
 </head>
 <body class="bg-black min-h-screen">
-    <header style="background-color: #11111F;" class="text-white py-2 h-16">
+        <header style="background-color: #11111F;" class="text-white py-2 h-16">
         <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-8">
                 <div class="flex items-end space-x-2">
                     <img src="{% static 'images/logo.png' %}" alt="TakosuAnime" class="h-12">
                 </div>
+                
                 <a href="{% url 'anime_list' %}" class="text-white hover:text-yellow-400">Inicio</a>
-                <a href="#" class="text-white hover:text-yellow-400">Categorias</a>
+                
+                <div class="relative">
+                    <button id="categoryToggle" class="text-white hover:text-yellow-400">
+                        Categorías
+                    </button>
+                    <div id="categoryMenu" style="background-color: #11111F;" class="hidden w-22 absolute bg-black p-2 mt-2 z-20 rounded-md shadow-md">
+                        {% for category in categories %}
+                            <a href="?category={{ category.name }}" class="block text-white hover:text-yellow-400 px-2 py-1">
+                                {{ category.name }}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
 
             <div class="flex items-center space-x-4">
-                <div class="relative">
-                    <button class="h-10 px-4 text-white rounded-md hover:text-yellow-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16">
-                            <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
-                        </svg>
-                    </button>
-                </div>
+                <form method="get">
+                    <div class="flex items-center relative">
+                        <button type="button" id="toggleSearch" class="text-white h-10 w-10 flex items-center justify-center  hover:text-yellow-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                            </svg>
+                        </button>
+
+                        <div id="searchContainer" class="ml-2 hidden items-center space-x-1 transition-all duration-300">
+                            <input style="background-color: #11111F;" type="text" name="search" id="searchInput" placeholder="Buscar anime..." class="px-4 py-2 text-white rounded-md focus:outline-none">
+                            <button type="button" id="clearSearch" class="text-white hover:text-yellow-400">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                    <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </form>
 
                 <div class="relative">
                     {% if request.user.is_authenticated %}
@@ -46,9 +70,9 @@
                             </form>
                         </div>
                     {% else %}
-                    <a href="{% url 'login' %}" class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-md">
-                        Ingresar
-                    </a>
+                        <a href="{% url 'login' %}" class="text-white py-2 px-4 rounded-md hover:text-yellow-500">Iniciar Sesión</a>
+                        |
+                        <a href="{% url 'register' %}" class="text-white py-2 px-4 rounded-md hover:text-yellow-500">Registrarse</a>
                     {% endif %}
                 </div>
             </div>
@@ -75,7 +99,6 @@
             Actualizar
         </button>
     </form>
-
     <script src="{% static 'js/header.js' %}"></script>
 </body>
 </html>

@@ -53,18 +53,28 @@ class AnimeList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        search_value = self.request.GET.get('search') or ''
         category_name = self.request.GET.get('category')
         
-        if search_value:
-            context['animes'] = context['animes'].filter(title__icontains=search_value)
         if category_name:
             context['animes'] = context['animes'].filter(categories__name=category_name)
-
-        context['search_value'] = search_value
         context['categories'] = Category.objects.all()
         return context
 
+
+class SearchBar(ListView):
+    model = Anime
+    context_object_name = 'animes'
+    template_name = 'search.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        search_value = self.request.GET.get('search') or ''
+
+        if search_value:
+            context['animes'] = context['animes'].filter(title__icontains=search_value)
+        context['search_value'] = search_value
+        return context
+    
 
 class AnimeDetail(LoginRequiredMixin, DetailView):
     model = Anime

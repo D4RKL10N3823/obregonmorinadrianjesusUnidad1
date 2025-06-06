@@ -23,22 +23,3 @@ document.addEventListener('click', (event) => {
         profileMenu.classList.add('hidden');
     }
 });
-
-const toggleBtn = document.getElementById('toggleSearch');
-const searchContainer = document.getElementById('searchContainer');
-const searchInput = document.getElementById('searchInput');
-const clearBtn = document.getElementById('clearSearch');
-
-toggleBtn.addEventListener('click', () => {
-    searchContainer.classList.remove('hidden');
-    searchContainer.classList.add('flex');
-    toggleBtn.classList.add('hidden');
-    setTimeout(() => searchInput.focus(), 100);
-});
-
-clearBtn.addEventListener('click', () => {
-    searchInput.value = '';
-    searchContainer.classList.remove('flex');
-    searchContainer.classList.add('hidden');
-    toggleBtn.classList.remove('hidden');
-});
