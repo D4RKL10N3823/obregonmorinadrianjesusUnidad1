@@ -20,18 +20,9 @@
                 
                 <div class="relative">
                     <button id="categoryToggle" class="text-white hover:text-yellow-400">
-                        Categorías
+                        Explorar
                     </button>
-                    <div id="categoryMenu" style="background-color: #11111F;" class="hidden w-22 absolute bg-black p-2 mt-2 z-20 rounded-md shadow-md">
-                        {% for category in categories %}
-                            <a href="?category={{ category.name }}" class="block text-white hover:text-yellow-400 px-2 py-1">
-                                {{ category.name }}
-                            </a>
-                        {% endfor %}
-                    </div>
                 </div>
-
-                <a href="{% url 'anime_list' %}" class="text-white hover:text-yellow-400">Contáctanos</a>
             </div>
 
             <div class="flex items-center space-x-4">
@@ -51,7 +42,7 @@
                         </button>
 
                         <div style="background-color: #11111F;" id="profileMenu" class="hidden absolute w-48 rounded-lg shadow-lg py-2 z-10">
-                            <a href="{% url 'update_user' user.id %}" class="block px-4 py-2 text-white hover:text-yellow-500">
+                            <a href="{% url 'profile' user.id %}" class="block px-4 py-2 text-white hover:text-yellow-500">
                                 Perfil
                             </a>
                             <form action="{% url 'logout' %}" method="post" class="block">
@@ -102,6 +93,7 @@
                 <span class="font-semibold text-base">Navegación</span>
                 <div class="flex flex-col space-y-1 pt-2">
                     <a href="{% url 'anime_list' %}" class="hover:text-yellow-400">Inicio</a>
+                    <a href="{% url 'anime_list' %}" class="hover:text-yellow-400">Explorar</a>
                     <a href="{%  url 'search' %}" class="hover:text-yellow-400">Buscar</a>
                 </div>
             </div>
@@ -119,7 +111,8 @@
                 <span class="font-semibold text-base">Cuenta</span>
                 <div class="flex flex-col pt-2 space-y-1">
                 {% if request.user.is_authenticated %}
-                    <a href="{% url 'update_user' user.id %}" class="hover:text-yellow-400">Perfil</a>
+                    <a href="{% url 'profile' user.id %}" class="hover:text-yellow-400">Perfil</a>
+                    <a href="{% url 'signup' %}" class="hover:text-yellow-400">Chat</a>
                     <form action="{% url 'logout' %}" method="post" class="block">
                         {% csrf_token %}
                         <button type="submit" class="text-white hover:text-yellow-500">

@@ -38,10 +38,10 @@ class Signup(FormView):
         return super(Signup, self).get(*args, **kwargs)
     
 
-class UpdateUser(LoginRequiredMixin, UpdateView):
+class Profile(LoginRequiredMixin, UpdateView):
     model = User
     fields = ['icon']   
-    template_name = 'update_user.html'
+    template_name = 'profile.html'
     success_url = reverse_lazy('anime_list')
 
 

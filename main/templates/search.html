@@ -21,15 +21,8 @@
                 
                 <div class="relative">
                     <button id="categoryToggle" class="text-white hover:text-yellow-400">
-                        Categorías
+                        Explorar
                     </button>
-                    <div id="categoryMenu" style="background-color: #11111F;" class="hidden w-22 absolute bg-black p-2 mt-2 z-20 rounded-md shadow-md">
-                        {% for category in categories %}
-                            <a href="?category={{ category.name }}" class="block text-white hover:text-yellow-400 px-2 py-1">
-                                {{ category.name }}
-                            </a>
-                        {% endfor %}
-                    </div>
                 </div>
             </div>
 
@@ -50,7 +43,7 @@
                         </button>
 
                         <div style="background-color: #11111F;" id="profileMenu" class="hidden absolute w-48 rounded-lg shadow-lg py-2 z-10">
-                            <a href="{% url 'update_user' user.id %}" class="block px-4 py-2 text-white hover:text-yellow-500">
+                            <a href="{% url 'profile' user.id %}" class="block px-4 py-2 text-white hover:text-yellow-500">
                                 Perfil
                             </a>
                             <form action="{% url 'logout' %}" method="post" class="block">
