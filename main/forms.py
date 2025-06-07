@@ -1,5 +1,5 @@
 from django import forms
-from .models import User
+from .models import User, Suggestion
 
 class CustomUserCreationForm(forms.ModelForm):
     password1 = forms.CharField(label="Contraseña", widget=forms.PasswordInput)
@@ -22,3 +22,8 @@ class CustomUserCreationForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+    
+class SuggestionForm(forms.ModelForm):
+    class Meta:
+        model = Suggestion
+        fields = ['name', 'message']

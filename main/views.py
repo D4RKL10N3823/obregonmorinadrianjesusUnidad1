@@ -8,7 +8,9 @@ from django.views.generic.edit import FormView, UpdateView
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Anime, User, Episode, Comment, Category
+from .models import Anime, User, Episode, Comment, Category, HelpMessage
+from .forms import SuggestionForm
+from django import forms
 from django.urls import reverse_lazy
 
 class Login(LoginView):
@@ -75,6 +77,10 @@ class SearchBar(ListView):
         return context
     
 
+class Help(ListView):
+    template_name = 'help.html'
+
+
 class AnimeDetail(LoginRequiredMixin, DetailView):
     model = Anime
     context_object_name = 'anime'
@@ -115,3 +121,40 @@ class EpisodeDetail(LoginRequiredMixin, DetailView):
                 content=content
             )
         return HttpResponseRedirect(self.request.path_info)
+    
+
+class Suggestion(FormView):
+    template_name = 'suggestion.html'
+    form_class = SuggestionForm
+    success_url = reverse_lazy('suggestion')  
+
+    def form_valid(self, form):
+        suggestion = form.save(commit=False)
+        if self.request.user.is_authenticated:
+            suggestion.user = self.request.user
+        suggestion.save()
+        return super().form_valid(form)
+    
+
+class HelpMessageForm(forms.ModelForm):
+    class Meta:
+        model = HelpMessage
+        fields = ['message']
+
+class HelpChat(LoginRequiredMixin, FormView, ListView):
+    template_name = 'help_chat.html'
+    form_class = HelpMessageForm
+    success_url = reverse_lazy('help_chat')
+    model = HelpMessage
+    context_object_name = 'messages'
+
+    def get_queryset(self):
+        user = self.request.user
+        return HelpMessage.objects.filter(sender=user) | HelpMessage.objects.filter(recipient=user)
+
+    def form_valid(self, form):
+        msg = form.save(commit=False)
+        msg.sender = self.request.user
+        msg.recipient = None 
+        msg.save()
+        return super().form_valid(form)

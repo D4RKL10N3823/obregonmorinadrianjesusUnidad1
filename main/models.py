@@ -76,3 +76,27 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.anime.title} - {self.episode}"
+    
+
+class Suggestion(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
+    name = models.CharField(max_length=100)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Sugerencia de {self.name}"
+    
+
+class HelpMessage(models.Model):
+    sender = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='help_messages_sent', on_delete=models.CASCADE)
+    recipient = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='help_messages_received', on_delete=models.CASCADE, null=True, blank=True)
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['created_at']
+
+    def __str__(self):
+        return f"{self.sender.username} -> {self.recipient.username if self.recipient else 'Soporte'}: {self.message[:30]}"

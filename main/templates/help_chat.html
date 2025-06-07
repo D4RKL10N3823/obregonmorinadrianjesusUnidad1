@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+</head>
+<body>
+    <h2>Chat de Ayuda</h2>
+
+    <div style="height:300px; overflow-y:auto; border:1px solid #ccc; padding:10px;">
+    {% for msg in messages %}
+        <p>
+        <strong>{{ msg.sender.username }}</strong>: {{ msg.message }} <br>
+        <small>{{ msg.created_at }}</small>
+        </p>
+    {% empty %}
+        <p>No hay mensajes aún.</p>
+    {% endfor %}
+    </div>
+
+    <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Enviar</button>
+    </form>
+</body>
+</html>
