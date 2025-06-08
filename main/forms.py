@@ -1,23 +1,32 @@
 from django import forms
-from .models import User, Suggestion, HelpMessage, User
+from main.models import User, Suggestion, HelpMessage
+from django.core.exceptions import ValidationError
+from django.contrib.auth.password_validation import validate_password
+import requests
+from django.conf import settings
 
 class CustomUserCreationForm(forms.ModelForm):
-    # Creación de campos adicionales para la contraseña con validación de longitud de 8 caracteres minimos
-    password1 = forms.CharField(label="Contraseña", widget=forms.PasswordInput(attrs={'minlength': 8}))
+    password1 = forms.CharField(label="Contraseña",widget=forms.PasswordInput(attrs={'minlength': 8}))
     password2 = forms.CharField(label="Confirmar contraseña", widget=forms.PasswordInput(attrs={'minlength': 8}))
+
+    # Campo oculto para el token de reCAPTCHA v2
+    recaptcha_token = forms.CharField(widget=forms.HiddenInput(), required=True)
 
     class Meta:
         model = User
         fields = ['username', 'email']
 
-    #Funcion para verificar que el correo no se repita
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if User.objects.filter(email__iexact=email).exists():
             raise forms.ValidationError("Ya existe una cuenta con este correo electrónico.")
         return email
-    
-    # Funcion para validar que las contraseñas sean iguales
+
+    def clean_password1(self):
+        password1 = self.cleaned_data.get("password1")
+        validate_password(password1)
+        return password1
+
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
@@ -25,15 +34,35 @@ class CustomUserCreationForm(forms.ModelForm):
             raise forms.ValidationError("Las contraseñas no coinciden.")
         return password2
 
-    # Guarda la contraseña hasheada
+    def clean_recaptcha_token(self):
+        recaptcha_token = self.cleaned_data.get('recaptcha_token')
+
+        if not recaptcha_token:
+            raise forms.ValidationError("reCAPTCHA es requerido.")
+
+        recaptcha_response = requests.post(
+            'https://www.google.com/recaptcha/api/siteverify',
+            data={
+                'secret': settings.RECAPTCHA_SECRET_KEY,
+                'response': recaptcha_token
+            }
+        )
+        result = recaptcha_response.json()
+
+        if not result.get('success'):
+            raise forms.ValidationError("reCAPTCHA no verificado. Intenta nuevamente.")
+
+        return recaptcha_token
+
+
     def save(self, commit=True):
         user = super().save(commit=False)
-        user.set_password(self.cleaned_data["password1"])  
+        user.set_password(self.cleaned_data["password1"])
         if commit:
             user.save()
         return user
-    
 
+    
 class SuggestionForm(forms.ModelForm):
     class Meta:
         model = Suggestion

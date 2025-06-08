@@ -5,6 +5,9 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+RECAPTCHA_SITE_KEY = '6Lfga1krAAAAAKgLpNXiBDhs3cnDk8TWy3OG2K7S'
+RECAPTCHA_SECRET_KEY = '6Lfga1krAAAAAHNjrXV9KO0jUnv4Ko7zUZ19kn6P'
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -15,7 +18,7 @@ SECRET_KEY = 'django-insecure-p%1pf3p_ap9#zf!hqkve!v%3oh04n*cmhubh^i&sk^sgcg48jl
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 AUTH_USER_MODEL = 'main.User'
 

@@ -1,6 +1,27 @@
 {% extends "base.html" %}
 {% load form_filters %}
-    
+
+{% block extra_scripts %}
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script>
+        document.querySelector('form').addEventListener('submit', function (e) {
+            var token = grecaptcha.getResponse();
+            if (!token) {
+                e.preventDefault();
+                alert("Por favor verifica que no eres un robot.");
+                return;
+            }
+            
+            // Asigna el token al campo oculto del formulario
+            let hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", "recaptcha_token");
+            hiddenField.setAttribute("value", token);
+            this.appendChild(hiddenField);
+        });
+    </script>
+{% endblock %}
+
 {% block title %}Registrarse{% endblock %}
 {% block content %}
     <div class="flex items-center justify-center">
@@ -22,6 +43,9 @@
             <div class="mb-4">
                 <label for="password2" class="text-white block text-sm font-medium">Confirmar Contraseña</label>
                 {{ form.password2|add_class:"block w-full px-4 py-2 mt-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" }}
+            </div>
+            <div class="mb-4">
+                <div class="g-recaptcha" data-sitekey="{{ RECAPTCHA_SITE_KEY }}"></div>
             </div>
             <button type="submit" class="[background-color:#FFBC0E] w-full text-white py-2 px-4 rounded-md hover:bg-yellow-600">
                 Registrarse

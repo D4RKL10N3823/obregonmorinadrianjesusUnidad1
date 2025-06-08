@@ -13,6 +13,7 @@ from .models import Anime, User, Episode, Comment, Category, Conversation
 from .forms import SuggestionForm, HelpMessageForm
 from django.urls import reverse_lazy
 from django.core.exceptions import PermissionDenied
+from django.conf import settings
 
 
 class Login(LoginView):
@@ -40,6 +41,11 @@ class Signup(FormView):
         if self.request.user.is_authenticated:
             return redirect('anime_list')
         return super(Signup, self).get(*args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['RECAPTCHA_SITE_KEY'] = settings.RECAPTCHA_SITE_KEY
+        return context
     
 
 class Profile(LoginRequiredMixin, UpdateView):
