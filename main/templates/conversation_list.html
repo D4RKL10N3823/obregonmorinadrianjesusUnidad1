@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Conversaciones{% endblock %}
+
+{% block content %}
+    <h1 class="text-white text-xl font-bold">Lista de Conversaciones</h1>
+
+    <ul>
+    {% for conversation in conversations %}
+        <li class="py-2">
+            <a href="{% url 'conversation_detail' conversation.pk %}" class="text-white py-3 px-8 text-center [background-color:#11111F] rounded-md block h-12 w-1/4">
+                Conversación con {{ conversation.user.username }}
+            </a>
+        </li>
+    {% empty %}
+        <li class="text-white">No hay conversaciones.</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

@@ -7,11 +7,13 @@ from .forms import CustomUserCreationForm
 from django.views.generic.edit import FormView, UpdateView
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
+from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Anime, User, Episode, Comment, Category, HelpMessage
-from .forms import SuggestionForm
-from django import forms
+from .models import Anime, User, Episode, Comment, Category, Conversation
+from .forms import SuggestionForm, HelpMessageForm
 from django.urls import reverse_lazy
+from django.core.exceptions import PermissionDenied
+
 
 class Login(LoginView):
     model = User
@@ -24,7 +26,7 @@ class Login(LoginView):
 
 
 class Signup(FormView):
-    template_name = 'register.html'
+    template_name = 'signup.html'
     form_class = CustomUserCreationForm
     success_url = reverse_lazy('anime_list')
 
@@ -123,7 +125,7 @@ class EpisodeDetail(LoginRequiredMixin, DetailView):
         return HttpResponseRedirect(self.request.path_info)
     
 
-class Suggestion(FormView):
+class Suggestion(LoginRequiredMixin, FormView):
     template_name = 'suggestion.html'
     form_class = SuggestionForm
     success_url = reverse_lazy('suggestion')  
@@ -136,25 +138,56 @@ class Suggestion(FormView):
         return super().form_valid(form)
     
 
-class HelpMessageForm(forms.ModelForm):
-    class Meta:
-        model = HelpMessage
-        fields = ['message']
-
-class HelpChat(LoginRequiredMixin, FormView, ListView):
-    template_name = 'help_chat.html'
-    form_class = HelpMessageForm
-    success_url = reverse_lazy('help_chat')
-    model = HelpMessage
-    context_object_name = 'messages'
+class ConversationList(LoginRequiredMixin, ListView):
+    model = Conversation
+    template_name = 'conversation_list.html'
+    context_object_name = 'conversations'
 
     def get_queryset(self):
         user = self.request.user
-        return HelpMessage.objects.filter(sender=user) | HelpMessage.objects.filter(recipient=user)
+        if user.is_superuser:
+            return Conversation.objects.all()
+        else:
+            return Conversation.objects.filter(user=user)
+
+
+class HelpChat(LoginRequiredMixin, FormView, DetailView):
+    template_name = 'help_chat.html'
+    model = Conversation
+    form_class = HelpMessageForm
+    context_object_name = 'conversation'
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if not self.request.user.is_superuser and obj.user != self.request.user:
+            raise PermissionDenied()
+        return obj
+
+    def get_success_url(self):
+        return reverse_lazy('conversation_detail', kwargs={'pk': self.get_object().pk})
 
     def form_valid(self, form):
         msg = form.save(commit=False)
         msg.sender = self.request.user
-        msg.recipient = None 
+        msg.conversation = self.get_object()
+        if self.request.user.is_superuser:
+            msg.recipient = self.get_object().user
+        else:
+            msg.recipient = None
         msg.save()
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['messages'] = self.get_object().messages.order_by('created_at')
+        return context
+
+
+class RedirectToConversation(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        if user.is_superuser:
+            return redirect('conversation_list')
+        else:
+            conversation, created = Conversation.objects.get_or_create(user=user)
+            return redirect('conversation_detail', pk=conversation.pk)

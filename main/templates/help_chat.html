@@ -1,28 +1,79 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat</title>
-</head>
-<body>
-    <h2>Chat de Ayuda</h2>
+{% extends "base.html" %}
+{% load static %}
+{% load form_filters %}
 
-    <div style="height:300px; overflow-y:auto; border:1px solid #ccc; padding:10px;">
-    {% for msg in messages %}
-        <p>
-        <strong>{{ msg.sender.username }}</strong>: {{ msg.message }} <br>
-        <small>{{ msg.created_at }}</small>
-        </p>
-    {% empty %}
-        <p>No hay mensajes aún.</p>
-    {% endfor %}
+{% block extra_scripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const messageInput = document.querySelector('#id_message');
+            const form = document.querySelector('#message-form');
+            const chatBox = document.querySelector('#chat-box');
+
+            // Mostrar el último mensaje
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Enviar mensaje con Enter
+            messageInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    form.submit();
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block title %}Chat de Ayuda{% endblock %}
+{% block content %}
+    <h2 class="text-white text-2xl font-bold">Chat de Ayuda</h2>
+
+    <!-- Mostrar Mensajes -->
+    <div class="relative w-1/2 mx-auto border border-gray-700 rounded-lg" style="height:650px;">
+        <div id="chat-box" class="overflow-y-auto h-[600px] p-4 space-y-2">
+            {% for msg in messages %}
+                {% if msg.sender == request.user %}
+                    <!-- Mostrar los mensajes que envio el usuario -->
+                    <div class="flex justify-end">
+                        <div class="flex items-end gap-2 max-w-[70%]">
+                            <div class="[background-color:#FFBC0E] text-black p-3 rounded-lg rounded-br-none">
+                                <p>{{ msg.message }}</p>
+                                <small class="text-gray-800 text-xs">{{ msg.created_at }}</small>
+                            </div>
+                            <img src="{% if msg.sender.icon %}{{ msg.sender.icon.url }}{% else %}{% static 'default_icon.png' %}{% endif %}"
+                                alt="{{ msg.sender.username }}"
+                                class="w-8 h-8 rounded-full object-cover">
+                        </div>
+                    </div>
+                {% else %}
+                    <!-- Mostrar los mensajes que se enviaron al usuario -->
+                    <div class="flex justify-start">
+                        <div class="flex items-end gap-2 max-w-[70%]">
+                            <img src="{% if msg.sender.icon %}{{ msg.sender.icon.url }}{% else %}{% static 'default_icon.png' %}{% endif %}"
+                                alt="{{ msg.sender.username }}"
+                                class="w-8 h-8 rounded-full object-cover">
+                            <div class="[background-color:#11111F] text-white p-3 rounded-lg rounded-bl-none">
+                                <p><strong>{{ msg.sender.username }}</strong>: {{ msg.message }}</p>
+                                <small class="text-gray-300 text-xs">{{ msg.created_at }}</small>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% empty %}
+                <p class="text-white">No hay mensajes aún.</p>
+            {% endfor %}
+        </div>
+
+        <!-- Enviar mensaje -->
+        <form method="post" class="absolute bottom-0 left-0 right-0 p-2" id="message-form">
+            {% csrf_token %}
+            <div class="flex items-center gap-2">
+                {{ form.message|add_class:"text-white w-full h-10 px-4 py-2 border border-gray-700 rounded bg-black resize-none overflow-hidden" }}
+                <button type="submit" class="[background-color:#FFBC0E] text-black px-2 py-2 rounded-full hover:bg-yellow-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-right-short" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8"/>
+                    </svg>
+                </button>
+            </div>
+        </form>
     </div>
-
-    <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Enviar</button>
-    </form>
-</body>
-</html>
+{% endblock %}

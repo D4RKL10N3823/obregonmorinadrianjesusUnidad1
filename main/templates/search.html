@@ -1,74 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% load static %}
-    <script src="https://cdn.tailwindcss.com"></script>
+{% extends 'base.html' %}
+{% load static %}
+{% block extra_scripts %}
     <script src="{% static 'js/search.js' %}"></script>
-    <script src="{% static 'js/header.js' %}"></script>
-    <title>Search</title>
-</head>
-<body class="bg-black min-h-screen">
-    <header style="background-color: #11111F;" class="text-white py-2 h-16">
-        <div class="container mx-auto flex justify-between items-center">
-            <div class="flex items-center space-x-8">
-                <div class="flex items-end space-x-2">
-                    <img src="{% static 'images/logo.png' %}" alt="TakosuAnime" class="h-12">
-                </div>
-                
-                <a href="{% url 'anime_list' %}" class="text-white hover:text-yellow-400">Inicio</a>
-                
-                <div class="relative">
-                    <button id="categoryToggle" class="text-white hover:text-yellow-400">
-                        Explorar
-                    </button>
-                </div>
-            </div>
+{% endblock %}
 
-            <div class="flex items-center space-x-4">
-                <div class="flex items-center relative">
-                    <a href="{% url 'search' %}" class="text-white h-10 w-10 flex items-center justify-center  hover:text-yellow-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-                        </svg>
-                    </a>
-                </div>
-
-
-                <div class="relative">
-                    {% if request.user.is_authenticated %}
-                        <button id="profileMenuButton" class="inline-block focus:outline-none">
-                            <img src="{{ user.icon.url }}" alt="{{ user.username }}" class="w-10 h-10 rounded-full object-cover" />
-                        </button>
-
-                        <div style="background-color: #11111F;" id="profileMenu" class="hidden absolute w-48 rounded-lg shadow-lg py-2 z-10">
-                            <a href="{% url 'profile' user.id %}" class="block px-4 py-2 text-white hover:text-yellow-500">
-                                Perfil
-                            </a>
-                            <form action="{% url 'logout' %}" method="post" class="block">
-                                {% csrf_token %}
-                                <button type="submit" class="w-full text-left px-4 py-2 text-white hover:text-yellow-500">
-                                    Cerrar Sesión
-                                </button>
-                            </form>
-                        </div>
-                    {% else %}
-                        <a href="{% url 'login' %}" class="text-white py-2 px-4 rounded-md hover:text-yellow-500">Iniciar Sesión</a>
-                        |
-                        <a href="{% url 'signup' %}" class="text-white py-2 px-4 rounded-md hover:text-yellow-500">Registrarse</a>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </header>
-
+{% block title %}Buscador{% endblock %}
+{% block content %}
     <form method="get" class="mx-[20%] py-8">
         <div class="flex justify-end items-center relative">
             <div id="searchContainer" class="relative w-[95%] transition-all duration-300 ease-in-out">
-                <input type="text" name="search" id="searchInput" placeholder="Buscar anime..." class="bg-transparent text-2xl border-b-2 border-yellow-400 text-white px-4 py-2 pr-10 w-full focus:outline-none transition-all duration-300"/>
+                <input type="text" name="search" id="searchInput" placeholder="Buscar anime..." class="bg-transparent text-2xl border-b-2 border-yellow-500 text-white px-4 py-2 pr-10 w-full focus:outline-none transition-all duration-300"/>
 
-                <button type="button" id="clearSearch" class="hidden absolute right-2 top-1/2 transform -translate-y-1/2 text-white hover:text-yellow-400">
+                <button type="button" id="clearSearch" class="hidden bg-transparent absolute right-2 top-1/2 transform -translate-y-1/2 text-white hover:bg-transparent hover:text-yellow-400">
                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
                         <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z"/>
                     </svg>
@@ -78,30 +21,29 @@
     </form>
 
     {% if search_value %}
-    <main class="container mx-auto py-8">
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {% if animes %}
-                {% for anime in animes %}
-                <a href="{% url 'anime_detail' anime.title %}">
-                    <div class="shadow-md overflow-hidden">
-                        <img src="{{ anime.image_card.url }}" alt="{{ anime.title }}" class="w-full object-cover rounded-sm">
-                        <div class="p-2">
-                            <h2 class="text-sm font-bold text-center text-white">{{ anime.title }}</h2>
-                            <p class="text-xs text-gray-200 text-center">{{ anime.total_episodes }} Episodios</p>
+        <main>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                {% if animes %}
+                    {% for anime in animes %}
+                        <a href="{% url 'anime_detail' anime.title %}">
+                            <div class="shadow-md overflow-hidden">
+                                <img src="{{ anime.image_card.url }}" alt="{{ anime.title }}" class="w-full object-cover rounded-sm">
+                                <div class="p-2">
+                                    <h2 class="text-sm font-bold text-center text-white">{{ anime.title }}</h2>
+                                    <p class="text-xs text-gray-200 text-center">{{ anime.total_episodes }} Episodios</p>
+                                </div>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    {% else %}
+                        <div class="col-span-full  items-center justify-center text-center mt-8">
+                            <h2 class="text-white text-xl font-semibold mb-2">No se encontraron resultados</h2>
+                            <p class="text-gray-400">No hay animes que coincidan con "<strong>{{ search_value }}</strong>"</p>
+                            <img src="{% static 'images/not_found.gif' %}" alt="No results" class="mx-auto mt-4 w-22">
+                            <a href="{% url 'anime_list' %}" class="inline-block mt-4 text-yellow-400 hover:underline">Volver a ver todos</a>
                         </div>
-                    </div>
-                </a>
-                {% endfor %}
-            {% else %}
-                <div class="col-span-full  items-center justify-center text-center mt-8">
-                    <h2 class="text-white text-xl font-semibold mb-2">No se encontraron resultados</h2>
-                    <p class="text-gray-400">No hay animes que coincidan con "<strong>{{ search_value }}</strong>"</p>
-                    <img src="{% static 'images/not_found.gif' %}" alt="No results" class="mx-auto mt-4 w-22">
-                    <a href="{% url 'anime_list' %}" class="inline-block mt-4 text-yellow-400 hover:underline">Volver a ver todos</a>
+                    {% endif %}
                 </div>
-            {% endif %}
-        </div>
-    </main>
+            </main>
     {% endif %}
-</body>
-</html>
+{% endblock %}
