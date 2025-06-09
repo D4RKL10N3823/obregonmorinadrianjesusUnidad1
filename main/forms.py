@@ -1,13 +1,13 @@
 from django import forms
 from main.models import User, Suggestion, HelpMessage
 from django.contrib.auth.password_validation import validate_password
-from captcha.fields import ReCaptchaField
-from captcha.widgets import ReCaptchaV2Checkbox
+from django_recaptcha.fields import ReCaptchaField
+
 
 class CustomUserCreationForm(forms.ModelForm):
     password1 = forms.CharField(label="Contraseña",widget=forms.PasswordInput(attrs={'minlength': 8}))
     password2 = forms.CharField(label="Confirmar contraseña", widget=forms.PasswordInput(attrs={'minlength': 8}))
-    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox())
+    captcha = ReCaptchaField()
 
     class Meta:
         model = User
