@@ -12,8 +12,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'insecure-default')
 
 
-RECAPTCHA_SITE_KEY = '6LfYAForAAAAAMzIkOgj_bSFRQDBzKLivprsPhNN'
-RECAPTCHA_SECRET_KEY = '6LfYAForAAAAAACDzla7i2cT6fOJ0MdqPa30I2cZ'
+RECAPTCHA_SITE_KEY = '6Lfga1krAAAAAKgLpNXiBDhs3cnDk8TWy3OG2K7S'
+RECAPTCHA_SECRET_KEY = '6Lfga1krAAAAAHNjrXV9KO0jUnv4Ko7zUZ19kn6P'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -126,6 +127,7 @@ LOGIN_URL = 'login'
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
