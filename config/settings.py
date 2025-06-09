@@ -1,5 +1,4 @@
 from pathlib import Path
-from django.template.context_processors import media
 import dj_database_url
 import os
 
@@ -10,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-p%1pf3p_ap9#zf!hqkve!v%3oh04n*cmhubh^i&sk^sgcg48jl'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'insecure-default')
 
 
 RECAPTCHA_SITE_KEY = '6LfYAForAAAAAMzIkOgj_bSFRQDBzKLivprsPhNN'
