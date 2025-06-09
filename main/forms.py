@@ -8,7 +8,7 @@ from django_recaptcha.fields import ReCaptchaField
 class CustomUserCreationForm(forms.ModelForm):
     password1 = forms.CharField(label="Contraseña",widget=forms.PasswordInput(attrs={'minlength': 8}))
     password2 = forms.CharField(label="Confirmar contraseña", widget=forms.PasswordInput(attrs={'minlength': 8}))
-    captcha = ReCaptchaField(public_key=settings.RECAPTCHA_PUBLIC_KEY, private_key=settings.RECAPTCHA_PRIVATE_KEY,)
+    captcha = ReCaptchaField(public_key=settings.RECAPTCHA_SITE_KEY, private_key=settings.RECAPTCHA_SECRET_KEY,)
 
     class Meta:
         model = User
