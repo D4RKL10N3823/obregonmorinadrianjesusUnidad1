@@ -1,4 +1,5 @@
 from django import forms
+from django.conf import settings
 from main.models import User, Suggestion, HelpMessage
 from django.contrib.auth.password_validation import validate_password
 from django_recaptcha.fields import ReCaptchaField
@@ -7,7 +8,7 @@ from django_recaptcha.fields import ReCaptchaField
 class CustomUserCreationForm(forms.ModelForm):
     password1 = forms.CharField(label="Contraseña",widget=forms.PasswordInput(attrs={'minlength': 8}))
     password2 = forms.CharField(label="Confirmar contraseña", widget=forms.PasswordInput(attrs={'minlength': 8}))
-    captcha = ReCaptchaField()
+    captcha = ReCaptchaField(public_key=settings.RECAPTCHA_PUBLIC_KEY, private_key=settings.RECAPTCHA_PRIVATE_KEY,)
 
     class Meta:
         model = User
