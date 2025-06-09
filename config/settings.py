@@ -132,8 +132,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 RECAPTCHA_SITE_KEY = os.environ.get('RECAPTCHA_SITE_KEY')
 RECAPTCHA_SECRET_KEY = os.environ.get('RECAPTCHA_SECRET_KEY')
 
-print("RECAPTCHA_PUBLIC_KEY:", RECAPTCHA_SITE_KEY)
-print("RECAPTCHA_PRIVATE_KEY:", RECAPTCHA_SECRET_KEY)
+SILENCED_SYSTEM_CHECKS = ['django_recaptcha.recaptcha_test_key_error']
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
