@@ -1,19 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ anime.title }}</title>
-</head>
-<body>
-    <h1>{{ anime.title }}</h1>
-    <img src="{{ anime.image_detail.url }}" alt="{{anime.title}}" width="250px">
-    {% for episode in episodes %}
-    <div>
-        <a href="{% url 'episode_detail' anime_title=anime.title episode_number=episode.episode_number %}"><img src="{{ episode.image_url.url }}" alt="{{ episode.title }}" width="250px"></a>
-        <p>E{{ episode.episode_number }} - {{ episode.title }}</p>
-        <p><b>Fecha de lanzamiento:</b> {{ episode.release_date }}</p>
+{% extends "base.html" %}
+
+{% block title %}{{ anime.title }} - Anime Detail{% endblock %}
+
+{% block header_fullwidth %}
+    <div class="w-full relative">
+        <div class="relative w-full h-[550px]">
+            <img src="{{ anime.image_detail.url }}" alt="{{ anime.title }}"
+                class="absolute w-full h-full object-cover z-0">
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent z-10"></div>
+
+            <div class="relative z-30 p-6 md:p-20 max-w-5xl">
+                <h1 class="text-4xl md:text-5xl font-bold text-white drop-shadow mb-4">{{ anime.title }}</h1>
+                <p class="text-white text-sm md:text-base mb-6">{{ anime.description }}</p>
+                <a href="{% url 'episode_detail' anime_title=anime.title episode_number=1 %}" class="inline-flex items-center gap-2 [background-color:#FFBC0E] font-semibold px-6 py-2 rounded-sm hover:bg-yellow-600 transition text-black">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
+                        <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"/>
+                    </svg>
+                    COMENZAR A VER
+                </a>
+            </div>
+        </div>
     </div>
-    {% endfor %}
-</body>
-</html>
+{% endblock %}
+
+{% block content %}
+    <section class="p-6">
+        <h2 class="text-2xl font-semibold text-white mb-4">Episodios</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-4">
+            {% for episode in episodes %}
+            <div class="relative bg-gray-800 rounded-md overflow-hidden shadow-md hover:scale-[1.02] transition duration-200">
+                <a href="{% url 'episode_detail' anime_title=anime.title episode_number=episode.episode_number %}">
+                    <img src="{{ episode.image_url.url }}" alt="{{ episode.title }}" class="w-full h-auto object-cover">
+                    <span class="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-0.5 rounded">23m</span>
+                </a>
+                <div class="p-2 text-xs md:text-sm">
+                    <p><span class="text-yellow-400 font-bold">E{{ episode.episode_number }}</span> - {{ episode.title }}</p>
+                    <p class="text-gray-400">Fecha: {{ episode.release_date }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+{% endblock %}
+
+
+

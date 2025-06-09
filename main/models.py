@@ -1,5 +1,4 @@
 from django.db import models
-# Importo el formulario de usuario para modificarlo
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
 import os
@@ -12,7 +11,7 @@ def user_icon(instance, filename):
 # Define la ruta para las imágenes del anime
 def anime_image_upload_path(instance, filename):
     folder_name = instance.title.replace(' ', '_')
-    return
+    return os.path.join('anime', folder_name, filename)
 
 # Define la ruta para la imagen del capitulo
 def anime_image_episode(instance, filename):
