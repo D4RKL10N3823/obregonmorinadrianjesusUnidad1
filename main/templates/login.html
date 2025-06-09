@@ -19,6 +19,9 @@
             <button type="submit" class="[background-color:#FFBC0E]  w-full py-2 px-4 rounded-md hover:bg-yellow-600 text-white">
                 Iniciar Sesión
             </button>
+            <p class="text-center text-sm text-white mt-2">
+                <a href="{% url 'password_reset' %}" class="hover:underline">¿Olvidaste tu contraseña?</a>
+            </p>
             <p class="text-center text-sm text-white mt-4">
                 ¿No tienes una cuenta? <a href="{% url 'signup' %}" class="hover:underline">Registrarse</a>
             </p>

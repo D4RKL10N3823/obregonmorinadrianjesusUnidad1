@@ -9,7 +9,7 @@ from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Anime, User, Episode, Comment, Category, Conversation
+from .models import Anime, User, Episode, Comment, Category, Conversation, Suggestion
 from .forms import SuggestionForm, HelpMessageForm
 from django.urls import reverse_lazy
 from django.core.exceptions import PermissionDenied
@@ -37,19 +37,13 @@ class Signup(FormView):
         user = form.save()
         if user is not None:
             login(self.request, user)
-
         return super().form_valid(form)
     
     def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
             return redirect('anime_list')
         return super(Signup, self).get(*args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['RECAPTCHA_SITE_KEY'] = settings.RECAPTCHA_SITE_KEY
-        return context
-
+    
 
 class Profile(LoginRequiredMixin, UpdateView):
     model = User
@@ -146,6 +140,12 @@ class SuggestionView(LoginRequiredMixin, FormView):
             suggestion.user = self.request.user
         suggestion.save()
         return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.user.is_superuser:
+            context['suggestions'] = Suggestion.objects.select_related('user').order_by('-created_at')
+        return context
     
 
 class ConversationList(LoginRequiredMixin, ListView):

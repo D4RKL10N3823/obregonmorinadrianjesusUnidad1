@@ -5,16 +5,20 @@
 
 {% block content %}
     {% if user.is_superuser %}
-        <div class="max-w-2xl mx-auto mt-10">
+        <div class="max-w-2xl mx-auto">
             <h2 class="text-white text-2xl font-bold mb-4">Sugerencias recibidas</h2>
             {% if suggestions %}
                 <ul class="space-y-4">
                     {% for suggestion in suggestions %}
-                        <li class="bg-gray-800 p-4 rounded-md text-white">
-                            <strong>Asunto:</strong> {{ suggestion.subject }}<br>
-                            <strong>Mensaje:</strong> {{ suggestion.message }}<br>
-                            <strong>Enviado por:</strong> {{ suggestion.user.username }}<br>
-                            <strong>Fecha:</strong> {{ suggestion.created_at }}
+                        <li class="[background-color:#11111F] p-4 rounded-md text-white">
+                            <div class="flex justify-between items-start">
+                                <strong class="text-lg [color:#FFBC0E]">{{ suggestion.subject }}</strong>
+                                <span><strong>Usuario:</strong> {{ suggestion.user.username }}</span>
+                            </div>
+                            <p class="mt-2">{{ suggestion.message }}</p>
+                            <div class="flex justify-end">
+                                <p class="text-xs">{{ suggestion.created_at|date:"d/m/Y H:i" }}</p>
+                            </div>
                         </li>
                     {% endfor %}
                 </ul>

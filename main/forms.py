@@ -1,7 +1,6 @@
 from django import forms
 from django.conf import settings
 from main.models import User, Suggestion, HelpMessage
-from django.contrib.auth.password_validation import validate_password
 from django_recaptcha.fields import ReCaptchaField
 
 
@@ -19,11 +18,6 @@ class CustomUserCreationForm(forms.ModelForm):
         if User.objects.filter(email__iexact=email).exists():
             raise forms.ValidationError("Ya existe una cuenta con este correo electrónico.")
         return email
-
-    def clean_password1(self):
-        password1 = self.cleaned_data.get("password1")
-        validate_password(password1)
-        return password1
 
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")

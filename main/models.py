@@ -99,7 +99,7 @@ class Suggestion(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Sugerencia de {self.name}"
+        return f"Sugerencia de {self.user.username if self.user else 'Anónimo'}"
     
 # Modelo de las conversaciones
 class Conversation(models.Model):

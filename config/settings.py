@@ -1,5 +1,4 @@
 from pathlib import Path
-import dj_database_url
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -9,14 +8,23 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', 'insecure-default')
+SECRET_KEY = 'django-insecure-p%1pf3p_ap9#zf!hqkve!v%3oh04n*cmhubh^i&sk^sgcg48jl'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'obregonmorinadrianjesusunidad1.onrender.com']
+ALLOWED_HOSTS = ['127.0.0.1']
 
 AUTH_USER_MODEL = 'main.User'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'adrianlolobre@gmail.com'
+EMAIL_HOST_PASSWORD = 'vlpm eykg rdeo kieg'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'takosuanime@web.com'
+
 
 # Application definition
 
@@ -34,7 +42,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -67,24 +74,13 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-if os.environ.get('RENDER', None):  # Si estás en Render
-    DATABASE_URL = os.environ.get('DATABASE_URL')
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=DATABASE_URL,
-            conn_max_age=600,
-            ssl_require=DATABASE_URL is not None and DATABASE_URL.startswith('postgres')
-        )
-    }
-else:  # Local (desarrollo)
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
 
-
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -123,14 +119,13 @@ LOGIN_URL = 'login'
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_DIRS = [ BASE_DIR / 'static' ] 
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-RECAPTCHA_SITE_KEY = os.environ.get('RECAPTCHA_SITE_KEY')
-RECAPTCHA_SECRET_KEY = os.environ.get('RECAPTCHA_SECRET_KEY')
+RECAPTCHA_SITE_KEY = '6Lfga1krAAAAAKgLpNXiBDhs3cnDk8TWy3OG2K7S'
+RECAPTCHA_SECRET_KEY = '6Lfga1krAAAAAHNjrXV9KO0jUnv4Ko7zUZ19kn6P'
 
 SILENCED_SYSTEM_CHECKS = ['django_recaptcha.recaptcha_test_key_error']
 # Default primary key field type

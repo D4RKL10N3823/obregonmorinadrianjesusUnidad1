@@ -28,7 +28,7 @@
     <h2 class="text-white text-2xl font-bold">Chat de Ayuda</h2>
 
     <!-- Mostrar Mensajes -->
-    <div class="relative w-1/2 mx-auto border border-gray-700 rounded-lg" style="height:650px;">
+    <div class="[background-color:#11111F] relative w-1/2 mx-auto rounded-lg" style="height:650px;">
         <div id="chat-box" class="overflow-y-auto h-[600px] p-4 space-y-2">
             {% for msg in messages %}
                 {% if msg.sender == request.user %}
@@ -51,7 +51,7 @@
                             <img src="{% if msg.sender.icon %}{{ msg.sender.icon.url }}{% else %}{% static 'default_icon.png' %}{% endif %}"
                                 alt="{{ msg.sender.username }}"
                                 class="w-8 h-8 rounded-full object-cover">
-                            <div class="[background-color:#11111F] text-white p-3 rounded-lg rounded-bl-none">
+                            <div class="bg-gray-800 text-white p-3 rounded-lg rounded-bl-none">
                                 <p><strong>{{ msg.sender.username }}</strong>: {{ msg.message }}</p>
                                 <small class="text-gray-300 text-xs">{{ msg.created_at }}</small>
                             </div>
@@ -67,7 +67,7 @@
         <form method="post" class="absolute bottom-0 left-0 right-0 p-2" id="message-form">
             {% csrf_token %}
             <div class="flex items-center gap-2">
-                {{ form.message|add_class:"w-full h-10 px-4 py-2 rounded bg-gray-200 resize-none overflow-hidden" }}
+                {{ form.message|add_class:"w-full h-10 px-4 py-2 rounded bg-white resize-none overflow-hidden" }}
                 <button type="submit" class="[background-color:#FFBC0E] text-black px-2 py-2 rounded-full hover:bg-yellow-600">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-right-short" viewBox="0 0 16 16">
                         <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8"/>
