@@ -70,15 +70,14 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-if os.environ.get('RENDER', None):  # Si estás en Render
+if os.environ.get('RENDER', None):
     DATABASES = {
         'default': dj_database_url.config(
-            default='sqlite:///db.sqlite3',
             conn_max_age=600,
             ssl_require=True
         )
     }
-else:  # Local (desarrollo)
+else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
