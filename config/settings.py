@@ -14,7 +14,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'insecure-default')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['127.0.0.1', 'onrender.com']
 
 AUTH_USER_MODEL = 'main.User'
 
