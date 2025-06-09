@@ -1,13 +1,10 @@
 from pathlib import Path
 from django.template.context_processors import media
+import dj_database_url
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-RECAPTCHA_SITE_KEY = '6Lfga1krAAAAAKgLpNXiBDhs3cnDk8TWy3OG2K7S'
-RECAPTCHA_SECRET_KEY = '6Lfga1krAAAAAHNjrXV9KO0jUnv4Ko7zUZ19kn6P'
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
@@ -15,10 +12,14 @@ RECAPTCHA_SECRET_KEY = '6Lfga1krAAAAAHNjrXV9KO0jUnv4Ko7zUZ19kn6P'
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-p%1pf3p_ap9#zf!hqkve!v%3oh04n*cmhubh^i&sk^sgcg48jl'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+RECAPTCHA_SITE_KEY = '6LfYAForAAAAAMzIkOgj_bSFRQDBzKLivprsPhNN'
+RECAPTCHA_SECRET_KEY = '6LfYAForAAAAAACDzla7i2cT6fOJ0MdqPa30I2cZ'
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = os.environ.get('DEBUG', 'False') == 'True'
+
+ALLOWED_HOSTS = ['127.0.0.1', '.onrender.com']
 
 AUTH_USER_MODEL = 'main.User'
 
@@ -70,12 +71,21 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if os.environ.get('RENDER', None):  # Si estás en Render
+    DATABASES = {
+        'default': dj_database_url.config(
+            default='sqlite:///db.sqlite3',
+            conn_max_age=600,
+            ssl_require=True
+        )
     }
-}
+else:  # Local (desarrollo)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
@@ -115,9 +125,7 @@ LOGIN_URL = 'login'
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

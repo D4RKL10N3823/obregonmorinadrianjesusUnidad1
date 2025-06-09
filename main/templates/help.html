@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block extra_scripts %}
+    <script>
+        function toggleAccordion(id) {
+            const totalAccordions = 2;
+
+            for (let i = 1; i <= totalAccordions; i++) {
+                const content = document.getElementById(`content-${i}`);
+                const icon = document.getElementById(`icon-${i}`);
+                
+                if (i === id) {
+                    const isHidden = content.classList.contains('hidden');
+                    content.classList.toggle('hidden', !isHidden);
+                    icon.textContent = isHidden ? '−' : '+';
+                } else {
+                    content.classList.add('hidden');
+                    icon.textContent = '+';
+                }
+            }
+        }
+    </script>
+{% endblock %}
+
+{% block title %}Ayuda{% endblock %}
+
+{% block content %}
+    <div class="w-full max-w-md mx-auto mt-5">
+        <div class="rounded-md text-white">
+            <button onclick="toggleAccordion(1)" class="w-full flex justify-between items-center p-4 [background-color:#11111F] border-none hover:[color:#FFBC0E] focus:outline-none">
+                <span class="font-semibold">¿Qué es TakosuAnime?</span>
+                <span id="icon-1">+</span>
+            </button>
+            <div id="content-1" class="hidden p-4 [background-color:#11111F] transition-all duration-300 ease-in-out">
+                TakosuAnime es una plataforma para descubrir, calificar y comentar tus animes favoritos.
+            </div>
+        </div>
+
+        <div class="text-white rounded-md mt-2">
+            <button onclick="toggleAccordion(2)" class="w-full flex justify-between items-center p-4 [background-color:#11111F] border-none hover:[color:#FFBC0E] focus:outline-none">
+            <span class="font-semibold">¿Cómo registrarse?</span>
+            <span id="icon-2">+</span>
+            </button>
+            <div id="content-2" class="hidden p-4 [background-color:#11111F]">
+                Solo haz clic en “Registrarse”, llena el formulario y verifica el captcha.
+            </div>
+        </div>
+    </div>
+{% endblock %}

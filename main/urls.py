@@ -2,7 +2,7 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth.views import LogoutView
-from .views import AnimeList, AnimeDetail, EpisodeDetail, Login, Signup, Profile, SearchBar, Suggestion, RedirectToConversation, ConversationList, HelpChat
+from .views import AnimeList, AnimeDetail, EpisodeDetail, Login, Signup, Profile, SearchBar, Help, SuggestionView, RedirectToConversation, ConversationList, HelpChat
 
 urlpatterns = [
     path('signup/', Signup.as_view(), name='signup'),
@@ -13,7 +13,8 @@ urlpatterns = [
     path('search/', SearchBar.as_view(), name='search'),
     path('profile/<int:pk>/', Profile.as_view(), name='profile'),
 
-    path('suggestion/', Suggestion.as_view(), name='suggestion'),
+    path('help/', Help.as_view(), name='help'),
+    path('suggestion/', SuggestionView.as_view(), name='suggestion'),
     path('conversations/', ConversationList.as_view(), name='conversation_list'),
     path('help-chat/<int:pk>/', HelpChat.as_view(), name='conversation_detail'),
     path('conversations/redirect/', RedirectToConversation.as_view(), name='home_redirect'),

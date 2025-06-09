@@ -1,16 +1,10 @@
 from django import forms
 from main.models import User, Suggestion, HelpMessage
-from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
-import requests
-from django.conf import settings
 
 class CustomUserCreationForm(forms.ModelForm):
     password1 = forms.CharField(label="Contraseña",widget=forms.PasswordInput(attrs={'minlength': 8}))
     password2 = forms.CharField(label="Confirmar contraseña", widget=forms.PasswordInput(attrs={'minlength': 8}))
-
-    # Campo oculto para el token de reCAPTCHA v2
-    recaptcha_token = forms.CharField(widget=forms.HiddenInput(), required=True)
 
     class Meta:
         model = User
@@ -34,27 +28,6 @@ class CustomUserCreationForm(forms.ModelForm):
             raise forms.ValidationError("Las contraseñas no coinciden.")
         return password2
 
-    def clean_recaptcha_token(self):
-        recaptcha_token = self.cleaned_data.get('recaptcha_token')
-
-        if not recaptcha_token:
-            raise forms.ValidationError("reCAPTCHA es requerido.")
-
-        recaptcha_response = requests.post(
-            'https://www.google.com/recaptcha/api/siteverify',
-            data={
-                'secret': settings.RECAPTCHA_SECRET_KEY,
-                'response': recaptcha_token
-            }
-        )
-        result = recaptcha_response.json()
-
-        if not result.get('success'):
-            raise forms.ValidationError("reCAPTCHA no verificado. Intenta nuevamente.")
-
-        return recaptcha_token
-
-
     def save(self, commit=True):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password1"])
@@ -66,10 +39,11 @@ class CustomUserCreationForm(forms.ModelForm):
 class SuggestionForm(forms.ModelForm):
     class Meta:
         model = Suggestion
-        fields = ['name', 'message']
+        fields = ['subject','message']
 
 
 class HelpMessageForm(forms.ModelForm):
     class Meta:
         model = HelpMessage
-        fields = ['message']  
+        fields = ['message']
+        widgets = {'message': forms.Textarea(attrs={'placeholder': 'Escribe algo....',})}

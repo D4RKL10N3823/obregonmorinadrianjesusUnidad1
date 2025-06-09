@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% load static %}
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="{% static 'js/header.js' %}?v=2"></script>
+    <script src="{% static 'js/header.js' %}"></script>
     {% block extra_scripts %}{% endblock %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <title>{% block title %}Mi sitio{% endblock %}</title>
@@ -82,7 +82,7 @@
             <div class="px-2">
                 <span class="font-semibold text-base">TakosuAnime</span>
                 <div class="flex flex-col pt-2 space-y-1">
-                    <a href="#">Ayuda</a>
+                    <a href="{% url 'help' %}">Ayuda</a>
                     <a href="{% url 'suggestion' %}">Buzón</a>
                     <a href="#">Contáctanos</a>
                 </div>
@@ -95,7 +95,7 @@
                     <a href="{% url 'profile' user.id %}">Perfil</a>
                     <form action="{% url 'logout' %}" method="post" class="block">
                         {% csrf_token %}
-                        <button type="submit">
+                        <button type="submit" class="hover:[color:#FFBC0E]">
                             Cerrar Sesión
                         </button>
                     </form>
@@ -112,9 +112,5 @@
             © 2025 TakosuAnime.
         </div>
     </footer>
-
-    {% block scripts %}
-        <script src="{% static 'js/header.js' %}"></script>
-    {% endblock %}
 </body>
 </html>

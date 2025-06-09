@@ -2,25 +2,24 @@
 {% load form_filters %}
 
 {% block extra_scripts %}
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://www.google.com/recaptcha/enterprise.js?render=6LebxlgrAAAAAAs6dTb6OopztJUb5VR0u421BQUe"></script>
     <script>
-        document.querySelector('form').addEventListener('submit', function (e) {
-            var token = grecaptcha.getResponse();
-            if (!token) {
-                e.preventDefault();
-                alert("Por favor verifica que no eres un robot.");
-                return;
-            }
-            
-            // Asigna el token al campo oculto del formulario
-            let hiddenField = document.createElement("input");
-            hiddenField.setAttribute("type", "hidden");
-            hiddenField.setAttribute("name", "recaptcha_token");
-            hiddenField.setAttribute("value", token);
-            this.appendChild(hiddenField);
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.querySelector("form");
+            form.addEventListener("submit", function (e) {
+                e.preventDefault();  // Evita envío inmediato
+                grecaptcha.enterprise.ready(function () {
+                    grecaptcha.enterprise.execute('6LebxlgrAAAAAAs6dTb6OopztJUb5VR0u421BQUe', { action: 'submit' })
+                        .then(function (token) {
+                            document.getElementById('recaptcha_token').value = token;
+                            form.submit();  
+                        });
+                });
+            });
         });
     </script>
 {% endblock %}
+
 
 {% block title %}Registrarse{% endblock %}
 {% block content %}
@@ -45,7 +44,7 @@
                 {{ form.password2|add_class:"block w-full px-4 py-2 mt-1 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" }}
             </div>
             <div class="mb-4">
-                <div class="g-recaptcha" data-sitekey="{{ RECAPTCHA_SITE_KEY }}"></div>
+                <input type="hidden" name="recaptcha_token" id="recaptcha_token">
             </div>
             <button type="submit" class="[background-color:#FFBC0E] w-full text-white py-2 px-4 rounded-md hover:bg-yellow-600">
                 Registrarse
@@ -53,6 +52,12 @@
             <p class="text-white text-center text-sm mt-4">
                 ¿Ya tienes una cuenta? <a href="{% url 'login' %}" class="text-blue-500 hover:underline">Inicia Sesión</a>
             </p>
+
+            {% if form.non_field_errors %}
+                <div class="text-red-500 text-sm mb-4">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
         </form>
     </div>
 {% endblock %}

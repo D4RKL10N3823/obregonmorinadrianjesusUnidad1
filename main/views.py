@@ -14,6 +14,8 @@ from .forms import SuggestionForm, HelpMessageForm
 from django.urls import reverse_lazy
 from django.core.exceptions import PermissionDenied
 from django.conf import settings
+import requests
+from django.shortcuts import render
 
 
 class Login(LoginView):
@@ -32,10 +34,23 @@ class Signup(FormView):
     success_url = reverse_lazy('anime_list')
 
     def form_valid(self, form):
+        recaptcha_response = self.request.POST.get('recaptcha_token')
+        data = {
+            'secret': settings.RECAPTCHA_SECRET_KEY,
+            'response': recaptcha_response
+        }
+        r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
+        result = r.json()
+
+        if not result.get('success'):
+            form.add_error(None, "Error de reCAPTCHA. Intenta de nuevo.")
+            return self.form_invalid(form)
+
         user = form.save()
         if user is not None:
             login(self.request, user)
-        return super(Signup, self).form_valid(form)
+
+        return super().form_valid(form)
     
     def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
@@ -46,7 +61,7 @@ class Signup(FormView):
         context = super().get_context_data(**kwargs)
         context['RECAPTCHA_SITE_KEY'] = settings.RECAPTCHA_SITE_KEY
         return context
-    
+
 
 class Profile(LoginRequiredMixin, UpdateView):
     model = User
@@ -83,10 +98,11 @@ class SearchBar(ListView):
             context['animes'] = context['animes'].filter(title__icontains=search_value)
         context['search_value'] = search_value
         return context
-    
 
-class Help(ListView):
-    template_name = 'help.html'
+
+class Help(View):
+    def get(self, request):
+        return render(request, 'help.html') 
 
 
 class AnimeDetail(LoginRequiredMixin, DetailView):
@@ -131,7 +147,7 @@ class EpisodeDetail(LoginRequiredMixin, DetailView):
         return HttpResponseRedirect(self.request.path_info)
     
 
-class Suggestion(LoginRequiredMixin, FormView):
+class SuggestionView(LoginRequiredMixin, FormView):
     template_name = 'suggestion.html'
     form_class = SuggestionForm
     success_url = reverse_lazy('suggestion')  

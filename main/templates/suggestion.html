@@ -1,11 +1,36 @@
 {% extends "base.html" %}
+{% load form_filters %}
 
 {% block title %}Sugerencia{% endblock %}
 
 {% block content %}
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Enviar</button>
-    </form>
+    {% if user.is_superuser %}
+        <div class="max-w-2xl mx-auto mt-10">
+            <h2 class="text-white text-2xl font-bold mb-4">Sugerencias recibidas</h2>
+            {% if suggestions %}
+                <ul class="space-y-4">
+                    {% for suggestion in suggestions %}
+                        <li class="bg-gray-800 p-4 rounded-md text-white">
+                            <strong>Asunto:</strong> {{ suggestion.subject }}<br>
+                            <strong>Mensaje:</strong> {{ suggestion.message }}<br>
+                            <strong>Enviado por:</strong> {{ suggestion.user.username }}<br>
+                            <strong>Fecha:</strong> {{ suggestion.created_at }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-white">No hay sugerencias.</p>
+            {% endif %}
+        </div>
+    {% else %}
+        <form method="post" class="[background-color:#11111F] p-8 rounded-lg shadow-md max-w-md mx-auto mt-10">
+            {% csrf_token %}
+            <label class="text-white block text-lg font-medium text-center">Sugerencia</label>
+            <label for="message" class="text-white block text-md font-medium">Asunto:</label>
+            {{ form.subject|add_class:"bg-gray-200 block w-full px-4 py-2 mt-1 rounded-md mb-4" }}
+            <label for="subject" class="text-white block text-md font-medium">Sugerencia:</label>
+            {{ form.message|add_class:"bg-gray-200 block w-full px-4 py-2 mt-1 rounded-md mb-4 " }}
+            <button type="submit" class="[background-color:#FFBC0E] w-full text-white py-2 px-4 rounded-md hover:bg-yellow-600">Enviar</button>
+        </form>
+    {% endif %}
 {% endblock %}
