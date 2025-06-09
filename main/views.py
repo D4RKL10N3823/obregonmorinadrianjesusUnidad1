@@ -13,9 +13,10 @@ from .models import Anime, User, Episode, Comment, Category, Conversation, Sugge
 from .forms import SuggestionForm, HelpMessageForm
 from django.urls import reverse_lazy
 from django.core.exceptions import PermissionDenied
+from .utils.recaptcha import verify_recaptcha
 from django.conf import settings
-import requests
 from django.shortcuts import render
+from django.contrib import messages
 
 
 class Login(LoginView):
@@ -34,10 +35,20 @@ class Signup(FormView):
     success_url = reverse_lazy('anime_list')
 
     def form_valid(self, form):
+        token = self.request.POST.get("g-recaptcha-response")
+        if not token or not verify_recaptcha(token):
+            messages.error(self.request, "Error de reCAPTCHA. Intenta de nuevo.")
+            return self.form_invalid(form)
+
         user = form.save()
         if user is not None:
             login(self.request, user)
         return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['RECAPTCHA_SITE_KEY'] = settings.RECAPTCHA_SITE_KEY
+        return context
     
     def get(self, *args, **kwargs):
         if self.request.user.is_authenticated:
