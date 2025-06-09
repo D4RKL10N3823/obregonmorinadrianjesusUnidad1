@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    {% load static %}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Error {{ status_code }} - TakosuAnime</title>
+</head>
+<body class="bg-black min-h-screen flex items-center justify-center">
+    <div class="col-span-full items-center justify-center text-center">
+        <img src="{% static 'images/error.gif' %}" alt="No results" class="mx-auto mt-4">
+        <h2 class="text-4xl font-semibold text-white mt-4 mb-4 italic">Ooops!!!...</h2>
+        <p class="text-gray-400 text-2xl">{{ message }}</p>
+        <a href="{% url 'anime_list' %}" class="inline-block hover:[color:#FFBC0E] hover:underline text-white text-lg mt-8 px-4">
+            Volver al inicio
+        </a>
+    </div>
+</body>
+</html>
+

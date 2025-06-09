@@ -212,3 +212,23 @@ class RedirectToConversation(LoginRequiredMixin, View):
         else:
             conversation, created = Conversation.objects.get_or_create(user=user)
             return redirect('conversation_detail', pk=conversation.pk)
+        
+
+def custom_error_view(request, exception=None, status_code=500, message="Ha ocurrido un error"):
+    context = {
+        "status_code": status_code,
+        "message": message
+    }
+    return render(request, "error.html", context=context, status=status_code)
+
+def error_404_view(request, exception):
+    return custom_error_view(request, exception, 404, "La página que buscas no fue encontrada.")
+
+def error_500_view(request):
+    return custom_error_view(request, status_code=500, message="Error interno del servidor.")
+
+def error_403_view(request, exception):
+    return custom_error_view(request, exception, 403, "Acceso denegado.")
+
+def error_400_view(request, exception):
+    return custom_error_view(request, exception, 400, "Solicitud incorrecta.")
