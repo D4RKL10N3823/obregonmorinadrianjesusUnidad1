@@ -2,18 +2,17 @@
 {% load form_filters %}
 
 {% block extra_scripts %}
-    <script src="https://www.google.com/recaptcha/enterprise.js?render=6LebxlgrAAAAAAs6dTb6OopztJUb5VR0u421BQUe"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render={{ RECAPTCHA_SITE_KEY }}"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             const form = document.querySelector("form");
             form.addEventListener("submit", function (e) {
                 e.preventDefault();  // Evita envío inmediato
-                grecaptcha.enterprise.ready(function () {
-                    grecaptcha.enterprise.execute('6LebxlgrAAAAAAs6dTb6OopztJUb5VR0u421BQUe', { action: 'submit' })
-                        .then(function (token) {
-                            document.getElementById('recaptcha_token').value = token;
-                            form.submit();  
-                        });
+                grecaptcha.ready(function () {
+                    grecaptcha.execute('{{ RECAPTCHA_SITE_KEY }}', { action: 'submit' }).then(function (token) {
+                        document.getElementById('recaptcha_token').value = token;
+                        form.submit();
+                    });
                 });
             });
         });
