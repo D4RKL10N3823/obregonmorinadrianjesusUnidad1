@@ -17,7 +17,7 @@ filelock==3.18.0
 fonttools==4.55.2
 future==1.0.0
 futures==3.0.5
-gevent==25.4.
+gevent
 greenlet==3.2.1
 gunicorn==23.0.0
 h11==0.14.0
