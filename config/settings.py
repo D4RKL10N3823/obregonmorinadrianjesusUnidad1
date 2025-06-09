@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-p%1pf3p_ap9#zf!hqkve!v%3oh04n*cmhubh^i&sk^sgcg48jl'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'insecure-default')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', 'False') == 'True'
@@ -131,6 +131,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 RECAPTCHA_SITE_KEY = os.environ.get('RECAPTCHA_SITE_KEY')
 RECAPTCHA_SECRET_KEY = os.environ.get('RECAPTCHA_SECRET_KEY')
+
+print("RECAPTCHA_PUBLIC_KEY:", RECAPTCHA_SITE_KEY)
+print("RECAPTCHA_PRIVATE_KEY:", RECAPTCHA_SECRET_KEY)
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
