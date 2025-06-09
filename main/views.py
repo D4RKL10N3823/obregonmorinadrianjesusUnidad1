@@ -34,18 +34,6 @@ class Signup(FormView):
     success_url = reverse_lazy('anime_list')
 
     def form_valid(self, form):
-        recaptcha_response = self.request.POST.get('g-recaptcha-response')
-        data = {
-            'secret': settings.RECAPTCHA_SECRET_KEY,
-            'response': recaptcha_response
-        }
-        r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
-        result = r.json()
-
-        if not result.get('success'):
-            form.add_error(None, "Error de reCAPTCHA. Intenta de nuevo.")
-            return self.form_invalid(form)
-
         user = form.save()
         if user is not None:
             login(self.request, user)

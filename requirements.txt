@@ -13,6 +13,7 @@ cors==1.0.1
 cycler==0.12.1
 dj-database-url==3.0.0
 Django==5.1.7
+django-recaptcha
 filelock==3.18.
 fonttools==4.55.2
 future==1.0.0
