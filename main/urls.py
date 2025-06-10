@@ -3,9 +3,11 @@ from django.conf import settings
 from django.contrib.auth import views as auth_views
 from django.conf.urls.static import static
 from django.contrib.auth.views import LogoutView
-from .views import AnimeList, AnimeDetail, EpisodeDetail, Login, Signup, Profile, SearchBar, Help, SuggestionView, RedirectToConversation, ConversationList, HelpChat
+from .views import SiteMapView, AnimeList, AnimeDetail, EpisodeDetail, Login, Signup, Profile, SearchBar, Help, ContactView, SuggestionView, RedirectToConversation, ConversationList, HelpChat
 
 urlpatterns = [
+    path('sitemap/', SiteMapView.as_view(), name='sitemap'),
+
     path('signup/', Signup.as_view(), name='signup'),
     path('login/', Login.as_view(), name='login'),
     path('logout/', LogoutView.as_view(next_page="anime_list"), name='logout'),
@@ -20,6 +22,7 @@ urlpatterns = [
     path('profile/<int:pk>/', Profile.as_view(), name='profile'),
 
     path('help/', Help.as_view(), name='help'),
+    path('contact/', ContactView.as_view(), name='contact'),
     path('suggestion/', SuggestionView.as_view(), name='suggestion'),
     path('conversations/', ConversationList.as_view(), name='conversation_list'),
     path('help-chat/<int:pk>/', HelpChat.as_view(), name='conversation_detail'),

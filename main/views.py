@@ -16,7 +16,14 @@ from django.core.exceptions import PermissionDenied
 from .utils.recaptcha import verify_recaptcha
 from django.conf import settings
 from django.shortcuts import render
+from django.views.generic import TemplateView  
 from django.contrib import messages
+from .forms import ContactForm
+from django.core.mail import EmailMessage
+
+
+class SiteMapView(TemplateView):  
+    template_name = 'sitemap.html'  
 
 
 class Login(LoginView):
@@ -139,6 +146,28 @@ class EpisodeDetail(LoginRequiredMixin, DetailView):
             )
         return HttpResponseRedirect(self.request.path_info)
     
+
+class ContactView(FormView):
+    template_name = 'contact.html'
+    form_class = ContactForm
+    success_url = reverse_lazy('contact') 
+
+    def form_valid(self, form):
+        name = form.cleaned_data['name']
+        email = form.cleaned_data['email']
+        subject = form.cleaned_data['subject'] or 'Contacto TakosuAnime'
+        message = form.cleaned_data['message']
+        body = (
+            f"Nombre: {name}\n"
+            f"Email de contacto: {email}\n\n"
+            f"{message}"
+        )
+
+        correo = EmailMessage(subject=subject, body=body, from_email=settings.DEFAULT_FROM_EMAIL, to=[settings.DEFAULT_FROM_EMAIL], headers={'Reply-To': form.cleaned_data['email']})
+        correo.send(fail_silently=False)
+        return super().form_valid(form)
+
+
 
 class SuggestionView(LoginRequiredMixin, FormView):
     template_name = 'suggestion.html'

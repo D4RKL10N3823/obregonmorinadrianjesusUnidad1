@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Contáctanos{% endblock %}
+
+{% block content %}
+    <div class="max-w-2xl mx-auto [background-color:#11111F] p-8 rounded-lg text-white">
+        <h2 class="text-3xl font-bold mb-4">Contáctanos</h2>
+
+        <p class="mb-6">
+            <span class="font-bold">¿Quieres Formar Parte de TakosuAnime?</span> Completa el formulario y te responderemos si hay vacantes disponibles.
+        </p>
+
+        <form method="post" action="{% url 'contact' %}" class="space-y-4">
+            {% csrf_token %}
+            <div>
+                <label for="id_name" class="block text-sm mb-1">Nombre <span class="text-red-500">*</span></label>
+                <input type="text" name="name" id="id_name" required class="bg-gray-200 text-black w-full px-3 py-2 rounded focus:outline-none" />
+            </div>
+            <div>
+                <label for="id_email" class="block text-sm mb-1">Correo electrónico <span class="text-red-500">*</span></label>
+                <input type="email" name="email" id="id_email" required class="bg-gray-200 text-black w-full px-3 py-2 rounded focus:outline-none" />
+            </div>
+            <div>
+                <label for="id_subject" class="block text-sm mb-1">Asunto</label>
+                <input type="text" name="subject" id="id_subject" class="bg-gray-200 text-black w-full px-3 py-2 rounded focus:outline-none" />
+            </div>
+            <div>
+                <label for="id_message" class="block text-sm mb-1">Mensaje <span class="text-red-500">*</span></label>
+                <textarea name="message" id="id_message" rows="5" required class="bg-gray-200  text-black w-full px-3 py-2 rounded focus:outline-none"></textarea>
+            </div>
+            <button type="submit" class="[background-color:#FFBC0E] font-semibold hover:bg-yellow-600 text-black px-4 py-2 rounded">
+                Enviar mensaje
+            </button>
+        </form>
+
+        <hr class="my-8 border-gray-700" />
+
+        <div class="space-y-4">
+            <p><strong>Email:</strong> adrianlolobre@gmail.com</p>
+            <p><strong>Horario de atención:</strong> Lunes a Viernes de 9:00 a 18:00</p>
+        </div>
+    </div>
+{% endblock %}

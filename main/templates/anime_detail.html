@@ -12,11 +12,11 @@
             <div class="relative z-30 p-6 md:p-20 max-w-5xl">
                 <h1 class="text-4xl md:text-5xl font-bold text-white drop-shadow mb-4">{{ anime.title }}</h1>
                 <p class="text-white text-sm md:text-base mb-6">{{ anime.description }}</p>
-                <a href="{% url 'episode_detail' anime_title=anime.title episode_number=1 %}" class="inline-flex items-center gap-2 [background-color:#FFBC0E] font-semibold px-6 py-2 rounded-sm hover:bg-yellow-600 transition text-black">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
+                <a href="{% url 'episode_detail' anime_title=anime.title episode_number=1 %}" class="inline-flex items-center gap-2 [background-color:#FFBC0E] px-6 py-2 rounded-sm hover:bg-yellow-600 transition">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="black" class="bi bi-play-fill" viewBox="0 0 16 16">
                         <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"/>
                     </svg>
-                    COMENZAR A VER
+                    <span class="font-semibold text-black">COMENZAR A VER</span>
                 </a>
             </div>
         </div>

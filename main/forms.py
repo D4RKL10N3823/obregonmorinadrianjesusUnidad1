@@ -28,6 +28,13 @@ class CustomUserCreationForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+    
+
+class ContactForm(forms.Form):
+    name = forms.CharField(max_length=100, label="Nombre")
+    email = forms.EmailField(label="Correo electrónico")
+    subject = forms.CharField(max_length=150, required=False, label="Asunto")
+    message = forms.CharField(widget=forms.Textarea, label="Mensaje")
 
     
 class SuggestionForm(forms.ModelForm):

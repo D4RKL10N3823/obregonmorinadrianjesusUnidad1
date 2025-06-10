@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Mapa del Sitio{% endblock %}
+
+{% block content %}
+  <h1 class="text-white text-2xl font-bold mb-4">Mapa del Sitio</h1>
+  <ul class="list-disc ml-6 text-white">
+    <li><strong>Inicio</strong>
+      <ul class="list-circle ml-6">
+        <li><a href="{% url 'anime_list' %}">Listado de Animes</a></li>
+        <li><a href="{% url 'search' %}">Buscar Animes</a></li>
+      </ul>
+    </li>
+    <li><strong>Anime</strong>
+      <ul class="list-circle ml-6">
+        <li><a href="#">Detalle de Anime</a></li>
+        <li><a href="#">Episodio</a></li>
+      </ul>
+    </li>
+    <li><strong>Cuenta</strong>
+      <ul class="list-circle ml-6">
+        <li><a href="{% url 'login' %}">Iniciar Sesión</a></li>
+        <li><a href="{% url 'signup' %}">Registrarse</a></li>
+        <li><a href="{% url 'password_reset' %}">Recuperar Contraseña</a></li>
+        <li><a href="{% url 'profile' user.id %}">Perfil</a></li>
+      </ul>
+    </li>
+    <li><strong>Soporte</strong>
+      <ul class="list-circle ml-6">
+        <li><a href="{% url 'help' %}">Ayuda</a></li>
+        <li><a href="{% url 'suggestion' %}">Buzón de Sugerencias</a></li>
+        <li><a href="{% url 'home_redirect' %}">Chat de Ayuda</a></li>
+        <li><a href="{% utl 'contact' %}">Contáctanos</a></li>
+      </ul>
+    </li>
+  </ul>
+{% endblock %}
