@@ -1,25 +1,21 @@
-from django.shortcuts import redirect
-from django.shortcuts import get_object_or_404
+from django.conf import settings
+from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpResponseRedirect
+from django.views import View
+from django.views.generic import TemplateView  
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import FormView, UpdateView
-from .forms import CustomUserCreationForm
+from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
-from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import Anime, User, Episode, Comment, Category, Conversation, Suggestion
-from .forms import SuggestionForm, HelpMessageForm
-from django.urls import reverse_lazy
-from django.core.exceptions import PermissionDenied
-from .utils.recaptcha import verify_recaptcha
-from django.conf import settings
-from django.shortcuts import render
-from django.views.generic import TemplateView  
-from django.contrib import messages
-from .forms import ContactForm
 from django.core.mail import EmailMessage
+from django.core.exceptions import PermissionDenied
+from django.urls import reverse_lazy
+from .forms import CustomUserCreationForm, ContactForm, SuggestionForm, HelpMessageForm
+from .models import Anime, User, Episode, Comment, Category, Conversation, Suggestion
+from .utils.recaptcha import verify_recaptcha
 
 
 class SiteMapView(TemplateView):  
