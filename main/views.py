@@ -3,8 +3,8 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
-from .forms import CustomUserCreationForm
 from django.views.generic.edit import FormView, UpdateView
+from .forms import CustomUserCreationForm
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
 from django.views import View
