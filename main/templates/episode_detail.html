@@ -1,48 +1,50 @@
 {% extends "base.html" %}
 
+{% block title %}{{ anime.title }} - E{{ episode.episode_number }}{% endblock %}
+
 {% block content %}
-<section class="min-h-screen py-8">
-  <div class="container mx-auto px-4">
-        
-    <!-- Cargar Vídeo -->
-    <div class="w-3/4 mx-auto aspect-video mb-2 rounded overflow-hidden shadow-lg">
-        <iframe class="w-full h-full" src="{{ episode.video_url }}" frameborder="0" allowfullscreen></iframe>
-    </div>
-    <h1 class="w-3/4 mx-auto text-white text-xl font-bold mb-12">{{ anime.title }} – Episodio {{ episode.episode_number }}: {{ episode.title }}</h1>
+  <section class="min-h-screen py-8">
+    <div class="container mx-auto px-4">
+          
+      <!-- Cargar Vídeo -->
+      <div class="w-3/4 mx-auto aspect-video mb-2 rounded overflow-hidden shadow-lg">
+          <iframe class="w-full h-full" src="{{ episode.video_url }}" frameborder="0" allowfullscreen></iframe>
+      </div>
+      <h1 class="w-3/4 mx-auto text-white text-xl font-bold mb-12">{{ anime.title }} – Episodio {{ episode.episode_number }}: {{ episode.title }}</h1>
 
-    <!-- Enviar comentario -->
-    <div class="w-full lg:w-3/4 mx-auto mb-12">
-      <h2 class="text-white text-2xl font-semibold mb-4">Deja tu comentario</h2>
-      <form method="post" class=" [background-color:#11111F;] p-6 rounded-sm shadow-md">
-        {% csrf_token %}
-        <textarea name="content" rows="4" class="w-full bg-gray-200 text-black p-3 rounded-sm" placeholder="Escribe tu comentario..." required></textarea>
-        <button type="submit" class="mt-4 [background-color:#FFBC0E;] hover:bg-yellow-600 text-black font-semibold py-2 px-6 rounded transition">
-          Enviar
-        </button>
-      </form>
-    </div>
+      <!-- Enviar comentario -->
+      <div class="w-full lg:w-3/4 mx-auto mb-12">
+        <h2 class="text-white text-2xl font-semibold mb-4">Deja tu comentario</h2>
+        <form method="post" class=" [background-color:#11111F;] p-6 rounded-sm shadow-md">
+          {% csrf_token %}
+          <textarea name="content" rows="4" class="w-full bg-gray-200 text-black p-3 rounded-sm" placeholder="Escribe tu comentario..." required></textarea>
+          <button type="submit" class="mt-4 [background-color:#FFBC0E;] hover:bg-yellow-600 text-black font-semibold py-2 px-6 rounded transition">
+            Enviar
+          </button>
+        </form>
+      </div>
 
-    <!-- Comentarios -->
-    <div class="w-full lg:w-3/4 mx-auto mb-8">
-      <h2 class="text-white text-2xl font-semibold mb-4">
-        Comentarios ({{ comments|length }})
-      </h2>
-      <div class="space-y-4">
-        {% for comment in comments %}
-          <div class="[background-color:#11111F;] p-4 rounded shadow-sm">
-            <div class="flex items-center mb-2">
-              <span class="[color:#FFBC0E;] font-bold mr-2">{{ comment.user.username }}</span>
-              <span class="text-gray-400 text-sm">
-                {{ comment.created_at|date:"d M Y H:i" }}
-              </span>
+      <!-- Comentarios -->
+      <div class="w-full lg:w-3/4 mx-auto mb-8">
+        <h2 class="text-white text-2xl font-semibold mb-4">
+          Comentarios ({{ comments|length }})
+        </h2>
+        <div class="space-y-4">
+          {% for comment in comments %}
+            <div class="[background-color:#11111F;] p-4 rounded shadow-sm">
+              <div class="flex items-center mb-2">
+                <span class="[color:#FFBC0E;] font-bold mr-2">{{ comment.user.username }}</span>
+                <span class="text-gray-400 text-sm">
+                  {{ comment.created_at|date:"d M Y H:i" }}
+                </span>
+              </div>
+              <p class="text-white">{{ comment.content }}</p>
             </div>
-            <p class="text-white">{{ comment.content }}</p>
-          </div>
-        {% empty %}
-          <p class="text-gray-400">No hay comentarios aún. ¡Sé el primero!</p>
-        {% endfor %}
+          {% empty %}
+            <p class="text-gray-400">No hay comentarios aún. ¡Sé el primero!</p>
+          {% endfor %}
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 {% endblock %}
