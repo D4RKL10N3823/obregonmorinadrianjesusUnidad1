@@ -33,7 +33,7 @@ class User(AbstractUser):
     def __str__(self):
         return self.username
 
-    # Elimina el ícono anterior si cambia (y no es el default)
+    # Elimina la foto de perfil anterior si cambia
     def save(self, *args, **kwargs):
         try:
             old_user = User.objects.get(pk=self.pk)
@@ -43,7 +43,7 @@ class User(AbstractUser):
             pass
         super().save(*args, **kwargs)
 
-#   Modelo de las categorias
+#  Modelo de las categorias
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
 

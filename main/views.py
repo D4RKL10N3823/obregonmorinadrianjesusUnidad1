@@ -18,25 +18,30 @@ from .models import Anime, User, Episode, Comment, Category, Conversation, Sugge
 from .utils.recaptcha import verify_recaptcha
 
 
+# Vista del mapa del sitio
 class SiteMapView(TemplateView):  
     template_name = 'sitemap.html'  
 
 
+# Vista de inicio de sesión
 class Login(LoginView):
     model = User
     fields = '__all__'
     template_name = 'login.html'
     redirect_authenticated_user = True
 
+    # Si el inicio de sesión es correcto, te redirige al index
     def get_success_url(self):
         return reverse_lazy('anime_list')
 
 
+# Vista de registro 
 class Signup(FormView):
     template_name = 'signup.html'
     form_class = CustomUserCreationForm
     success_url = reverse_lazy('anime_list')
 
+    # Verifica el reCAPTCHA antes de guardar el formulario
     def form_valid(self, form):
         token = self.request.POST.get("g-recaptcha-response")
         if not token or not verify_recaptcha(token):
@@ -59,6 +64,7 @@ class Signup(FormView):
         return super(Signup, self).get(*args, **kwargs)
     
 
+# Vista para actualizar el perfil del usuario
 class Profile(LoginRequiredMixin, UpdateView):
     model = User
     fields = ['icon']   
@@ -66,26 +72,20 @@ class Profile(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('anime_list')
 
 
+# Vista para mostrar los animes en el index
 class AnimeList(ListView):
     model = Anime
     context_object_name = 'animes'
     template_name = 'index.html'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        category_name = self.request.GET.get('category')
-        
-        if category_name:
-            context['animes'] = context['animes'].filter(categories__name=category_name)
-        context['categories'] = Category.objects.all()
-        return context
 
-
+# Vista para hacer busquedas de los animes
 class SearchBar(ListView):
     model = Anime
     context_object_name = 'animes'
     template_name = 'search.html'
 
+    # Hace la búsqueda de los animes
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         search_value = self.request.GET.get('search') or ''
@@ -96,22 +96,26 @@ class SearchBar(ListView):
         return context
 
 
+# Vista de ayuda
 class Help(View):
     def get(self, request):
         return render(request, 'help.html') 
 
 
+# Vista para mostrar a detalle el anime seleccionado y sus episodios
 class AnimeDetail(LoginRequiredMixin, DetailView):
     model = Anime
     context_object_name = 'anime'
     template_name = 'anime_detail.html'
     
+    # Muestra los capítulos del anime seleccionado
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['episodes'] = Episode.objects.filter(anime=self.object)
+        context['episodes'] = Episode.objects.filter(anime=self.object).order_by('episode_number')
         return context
+    
 
-
+# Vista para mostrar y poder ver el capitulo seleccionado del anime y comentarios
 class EpisodeDetail(LoginRequiredMixin, DetailView):
     model = Episode
     context_object_name = 'episode'
@@ -130,6 +134,7 @@ class EpisodeDetail(LoginRequiredMixin, DetailView):
         context['user'] = self.request.user if self.request.user.is_authenticated else None
         return context
     
+    # Maneja el envio de comentarios en el capitulo
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         content = request.POST.get('content')
@@ -142,12 +147,13 @@ class EpisodeDetail(LoginRequiredMixin, DetailView):
             )
         return HttpResponseRedirect(self.request.path_info)
     
-
+# Vista de contacto
 class ContactView(FormView):
     template_name = 'contact.html'
     form_class = ContactForm
     success_url = reverse_lazy('contact') 
 
+    # Maneja el envio del formulario de contacto
     def form_valid(self, form):
         name = form.cleaned_data['name']
         email = form.cleaned_data['email']
@@ -164,12 +170,13 @@ class ContactView(FormView):
         return super().form_valid(form)
 
 
-
+# Vista de Buzón de sugerencias
 class SuggestionView(LoginRequiredMixin, FormView):
     template_name = 'suggestion.html'
     form_class = SuggestionForm
     success_url = reverse_lazy('suggestion')  
 
+    # Maneja el envio del formulario de sugerencias
     def form_valid(self, form):
         suggestion = form.save(commit=False)
         if self.request.user.is_authenticated:
@@ -184,6 +191,7 @@ class SuggestionView(LoginRequiredMixin, FormView):
         return context
     
 
+# Vista del chat
 class ConversationList(LoginRequiredMixin, ListView):
     model = Conversation
     template_name = 'conversation_list.html'
