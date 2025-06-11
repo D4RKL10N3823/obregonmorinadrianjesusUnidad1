@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Muestra y oculta el menu del perfil al darle click (perfil y cerrar sesión)
     const profileMenuButton = document.getElementById('profileMenuButton');
     const profileMenu = document.getElementById('profileMenu');
 

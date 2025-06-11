@@ -19,11 +19,6 @@ def anime_image_episode(instance, filename):
     episode_folder = f"episode_{instance.episode_number}"
     return os.path.join('anime', folder_name, 'episodes', episode_folder, filename)
 
-# Define la ruta para los videos de los capitulos
-def anime_video_episode(instance, filename):
-    folder_name = instance.anime.title.replace(' ', '_')
-    episode_folder = f"episode_{instance.episode_number}"
-    return os.path.join('anime', folder_name, 'episodes', episode_folder, filename)
 
 # Modelo de Usuario 
 class User(AbstractUser):
@@ -70,7 +65,7 @@ class Episode(models.Model):
     anime = models.ForeignKey(Anime, on_delete=models.CASCADE, related_name='episodes')
     episode_number = models.IntegerField()
     release_date = models.DateField()
-    video_url = models.FileField(upload_to=anime_video_episode, null=True, blank=True)
+    video_url = models.URLField(null=True, blank=True, help_text="URL server")
     image_url = models.ImageField(upload_to=anime_image_episode, null=True, blank=True)
 
     class Meta:

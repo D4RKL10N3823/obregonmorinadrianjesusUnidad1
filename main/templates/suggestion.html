@@ -6,6 +6,7 @@
 {% block content %}
     {% if user.is_superuser %}
         <div class="max-w-2xl mx-auto">
+            <!-- Mostrar las sugerencias del usuario al administrador -->
             <h2 class="text-white text-3xl font-bold mb-4">Sugerencias recibidas</h2>
             {% if suggestions %}
                 <ul class="space-y-4">
@@ -27,6 +28,7 @@
             {% endif %}
         </div>
     {% else %}
+        <!-- Mostrar el formulario de sugerencias a los usuarios -->
         <div class="max-w-2xl mx-auto [background-color:#11111F] p-8 rounded-lg text-white">
         <h2 class="text-3xl font-bold mb-4">Buzón</h2>
 
@@ -38,12 +40,12 @@
             {% csrf_token %}
             <div>
             <div>
-                <label for="message" class="text-white block text-md font-medium">Asunto:</label>
-                {{ form.subject|add_class:"bg-gray-200 block w-full px-4 py-2 mt-1 rounded-md mb-4" }}
+                <label for="message" class="lock text-md font-medium">Asunto:</label>
+                {{ form.subject|add_class:"bg-gray-200 text-black block w-full px-4 py-2 mt-1 rounded-md mb-4" }}
             </div>
             <div>
-                <label for="subject" class="text-white block text-md font-medium">Sugerencia:</label>
-                {{ form.message|add_class:"bg-gray-200 block w-full px-4 py-2 mt-1 rounded-md mb-4 " }}
+                <label for="subject" class="block text-md font-medium">Sugerencia:</label>
+                {{ form.message|add_class:"bg-gray-200 text-black block w-full px-4 py-2 mt-1 rounded-md mb-4 " }}
             </div>
             <button type="submit" class="[background-color:#FFBC0E] font-semibold hover:bg-yellow-600 text-black px-4 py-2 rounded">
                 Enviar mensaje

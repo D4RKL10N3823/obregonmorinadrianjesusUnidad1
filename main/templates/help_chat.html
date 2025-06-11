@@ -30,7 +30,7 @@
     <!-- Mostrar Mensajes -->
     <div class="[background-color:#11111F] relative w-1/2 mx-auto rounded-lg" style="height:650px;">
         <div id="chat-box" class="overflow-y-auto h-[600px] p-4 space-y-2">
-            {% for msg in messages %}
+            {% for msg in chat_messages %}
                 {% if msg.sender == request.user %}
                     <!-- Mostrar los mensajes que envio el usuario -->
                     <div class="flex justify-end">
@@ -48,7 +48,7 @@
                     <!-- Mostrar los mensajes que se enviaron al usuario -->
                     <div class="flex justify-start">
                         <div class="flex items-end gap-2 max-w-[70%]">
-                            <img src="{% if msg.sender.icon %}{{ msg.sender.icon.url }}{% else %}{% static 'default_icon.png' %}{% endif %}"
+                            <img src="{% if msg.sender.icon %}{{ msg.sender.icon.url }}{% endif %}"
                                 alt="{{ msg.sender.username }}"
                                 class="w-8 h-8 rounded-full object-cover">
                             <div class="bg-gray-800 text-white p-3 rounded-lg rounded-bl-none">

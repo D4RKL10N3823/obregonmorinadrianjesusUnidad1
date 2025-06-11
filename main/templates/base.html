@@ -11,18 +11,31 @@
     <title>{% block title %}Mi sitio{% endblock %}</title>
 </head>
 <body  class="bg-black min-h-screen flex flex-col">
+    <!-- Alertas de errores -->
+    {% if messages %}
+        <div class="fixed top-4 right-4 space-y-2 z-50">
+            {% for message in messages %}
+            <div
+                class="px-4 py-3 rounded shadow
+                {% if message.tags == 'success' %}bg-green-100 border-green-400 text-green-700{% endif %}
+                {% if message.tags == 'error'   %}bg-red-100   border-red-400   text-red-700  {% endif %}
+                {% if message.tags == 'warning' %}bg-yellow-100 border-yellow-400 text-yellow-700{% endif %}
+                {% if message.tags == 'info'    %}bg-blue-100  border-blue-400   text-blue-700 {% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    
+    <!-- Menú de navegación (Navbar)-->
     <header style="background-color: #11111F;" class="text-white py-2 h-16">
         <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-8">
                 <div class="flex items-end space-x-2">
-                    <img src="{% static 'images/logo.png' %}" alt="TakosuAnime" class="h-12">
+                    <a href="{% url 'anime_list' %}"><img src="{% static 'images/logo.png' %}" alt="TakosuAnime" class="h-12"></a>
                 </div>
-                
                 <a href="{% url 'anime_list' %}" class="text-white hover:text-yellow-400">Inicio</a>
-                
-                <div class="relative">
-                    <a href="#">Explorar</a>
-                </div>
+                <a href="{% url 'help' %}">Ayuda</a>
             </div>
 
             <div class="flex items-center space-x-4">
@@ -33,8 +46,6 @@
                         </svg>
                     </a>
                 </div>
-
-
                 <div class="relative">
                     {% if request.user.is_authenticated %}
                         <button id="profileMenuButton" class="inline-block focus:outline-none">
@@ -64,19 +75,20 @@
 
     {% block header_fullwidth %}{% endblock %} 
 
+    <!-- Mostrar el contenido de las diferentes páginas-->
     <main class="container mx-auto py-8 flex-grow">
         {% block content %}
-                
+
         {% endblock %}
     </main>
 
+    <!-- Footer -->
     <footer style="background-color: #11111F;" class="text-white py-8">
         <div class="container mx-auto flex flex-col md:flex-row md:gap-x-20 justify-center items-start text-sm pt-5">
             <div class="px-2">
                 <span class="font-semibold text-base">Navegación</span>
                 <div class="flex flex-col space-y-1 pt-2">
                     <a href="{% url 'anime_list' %}">Inicio</a>
-                    <a href="{% url 'anime_list' %}">Explorar</a>
                     <a href="{%  url 'search' %}">Buscar</a>
                     <a href="{% url 'sitemap' %}">Mapa del Sitio</a>
                 </div>
@@ -110,7 +122,7 @@
                 </div>
             </div>
         </div>
-
+        
         <div class="text-sm text-gray-400 text-center pt-8" >
             © 2025 TakosuAnime.
         </div>

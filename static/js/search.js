@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Al momento de escribir muestra una X para borrar el contenido del input
     const searchInput = document.getElementById('searchInput');
     const clearBtn = document.getElementById('clearSearch');
 

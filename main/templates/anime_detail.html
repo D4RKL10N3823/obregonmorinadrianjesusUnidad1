@@ -3,6 +3,7 @@
 {% block title %}{{ anime.title }} - Anime Detail{% endblock %}
 
 {% block header_fullwidth %}
+    <!-- Portada del anime -->
     <div class="w-full relative">
         <div class="relative w-full h-[550px]">
             <img src="{{ anime.image_detail.url }}" alt="{{ anime.title }}"
@@ -24,20 +25,20 @@
 {% endblock %}
 
 {% block content %}
-    <section class="p-6">
+    <!-- Mostrar los episodios de los animes -->
+    <section class="">
         <h2 class="text-2xl font-semibold text-white mb-4">Episodios</h2>
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-4">
             {% for episode in episodes %}
-            <div class="relative bg-gray-800 rounded-md overflow-hidden shadow-md hover:scale-[1.02] transition duration-200">
-                <a href="{% url 'episode_detail' anime_title=anime.title episode_number=episode.episode_number %}">
-                    <img src="{{ episode.image_url.url }}" alt="{{ episode.title }}" class="w-full h-auto object-cover">
-                    <span class="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-0.5 rounded">23m</span>
-                </a>
-                <div class="p-2 text-xs md:text-sm">
-                    <p><span class="text-yellow-400 font-bold">E{{ episode.episode_number }}</span> - {{ episode.title }}</p>
-                    <p class="text-gray-400">Fecha: {{ episode.release_date }}</p>
+                <div class="relative rounded-md overflow-hidden shadow-md hover:scale-[1.02] transition duration-200">
+                    <a href="{% url 'episode_detail' anime_title=anime.title episode_number=episode.episode_number %}">
+                        <img src="{{ episode.image_url.url }}" alt="{{ episode.title }}" class="w-full">
+                    </a>
+                    <div class="p-2 text-md">
+                        <p class="text-white"><span class="text-yellow-400 font-bold">E{{ episode.episode_number }}</span> - {{ episode.title }}</p>
+                        <p class="text-gray-400 text-sm">Fecha: {{ episode.release_date }}</p>
+                    </div>
                 </div>
-            </div>
             {% endfor %}
         </div>
     </section>

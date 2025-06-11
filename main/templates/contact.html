@@ -12,6 +12,7 @@
             <a href="{% url 'home_redirect' %}" class="font-bold hover:underline">chat de ayuda</a>.
         </p>
 
+        <!-- Formulario para enviar el correo al administrador -->
         <form method="post" action="{% url 'contact' %}" class="space-y-4">
             {% csrf_token %}
             <div>

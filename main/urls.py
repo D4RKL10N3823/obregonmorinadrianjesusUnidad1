@@ -1,10 +1,11 @@
 from django.urls import path
-from django.conf import settings
 from django.contrib.auth import views as auth_views
-from django.conf.urls.static import static
 from django.contrib.auth.views import LogoutView
-from .views import SiteMapView, AnimeList, AnimeDetail, EpisodeDetail, Login, Signup, Profile, SearchBar, Help, ContactView, SuggestionView, RedirectToConversation, ConversationList, HelpChat
+from django.conf import settings
+from django.conf.urls.static import static
+from .views import SiteMapView, Signup, Login, AnimeList, AnimeDetail, EpisodeDetail, SearchBar,  Profile, Help, ContactView, SuggestionView, RedirectToConversation, ConversationList, HelpChat
 
+# URLs para poder acceder a las vistas de la aplicación
 urlpatterns = [
     path('sitemap/', SiteMapView.as_view(), name='sitemap'),
 
@@ -18,18 +19,18 @@ urlpatterns = [
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='password_reset_complete.html'), name='password_reset_complete'),
 
     path('', AnimeList.as_view(), name='anime_list'),
+    path('anime/<str:pk>/', AnimeDetail.as_view(), name='anime_detail'),
+    path('<str:anime_title>/episode-<int:episode_number>/', EpisodeDetail.as_view(), name='episode_detail'),
+
     path('search/', SearchBar.as_view(), name='search'),
     path('profile/<int:pk>/', Profile.as_view(), name='profile'),
 
     path('help/', Help.as_view(), name='help'),
     path('contact/', ContactView.as_view(), name='contact'),
     path('suggestion/', SuggestionView.as_view(), name='suggestion'),
+    path('conversations/redirect/', RedirectToConversation.as_view(), name='home_redirect'),
     path('conversations/', ConversationList.as_view(), name='conversation_list'),
     path('help-chat/<int:pk>/', HelpChat.as_view(), name='conversation_detail'),
-    path('conversations/redirect/', RedirectToConversation.as_view(), name='home_redirect'),
-
-    path('anime/<str:pk>/', AnimeDetail.as_view(), name='anime_detail'),
-    path('<str:anime_title>/episode-<int:episode_number>/', EpisodeDetail.as_view(), name='episode_detail'),
 ]
 
 if settings.DEBUG:

@@ -14,9 +14,8 @@ from django.core.mail import EmailMessage
 from django.core.exceptions import PermissionDenied
 from django.urls import reverse_lazy
 from .forms import CustomUserCreationForm, ContactForm, SuggestionForm, HelpMessageForm
-from .models import Anime, User, Episode, Comment, Category, Conversation, Suggestion
+from .models import Anime, User, Episode, Comment, Conversation, Suggestion
 from .utils.recaptcha import verify_recaptcha
-
 
 # Vista del mapa del sitio
 class SiteMapView(TemplateView):  
@@ -29,6 +28,10 @@ class Login(LoginView):
     fields = '__all__'
     template_name = 'login.html'
     redirect_authenticated_user = True
+
+    def form_valid(self, form):
+          messages.success(self.request, "¡Has iniciado sesión exitosamente!")
+          return super().form_valid(form)
 
     # Si el inicio de sesión es correcto, te redirige al index
     def get_success_url(self):
@@ -51,6 +54,8 @@ class Signup(FormView):
         user = form.save()
         if user is not None:
             login(self.request, user)
+
+        messages.success(self.request, "¡Te has registrado exitosamente!")
         return super().form_valid(form)
     
     def get_context_data(self, **kwargs):
@@ -113,7 +118,7 @@ class AnimeDetail(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context['episodes'] = Episode.objects.filter(anime=self.object).order_by('episode_number')
         return context
-    
+
 
 # Vista para mostrar y poder ver el capitulo seleccionado del anime y comentarios
 class EpisodeDetail(LoginRequiredMixin, DetailView):
@@ -138,15 +143,12 @@ class EpisodeDetail(LoginRequiredMixin, DetailView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         content = request.POST.get('content')
+
         if request.user.is_authenticated and content:
-            Comment.objects.create(
-                user=request.user,
-                anime=self.object.anime,
-                episode=self.object,
-                content=content
-            )
+            Comment.objects.create(user=request.user, anime=self.object.anime, episode=self.object, content=content)
         return HttpResponseRedirect(self.request.path_info)
     
+
 # Vista de contacto
 class ContactView(FormView):
     template_name = 'contact.html'
@@ -167,6 +169,7 @@ class ContactView(FormView):
 
         correo = EmailMessage(subject=subject, body=body, from_email=settings.DEFAULT_FROM_EMAIL, to=[settings.DEFAULT_FROM_EMAIL], headers={'Reply-To': form.cleaned_data['email']})
         correo.send(fail_silently=False)
+        messages.success(self.request, "¡Correo enviado, te responderemos lo mas pronto posible!")
         return super().form_valid(form)
 
 
@@ -182,6 +185,7 @@ class SuggestionView(LoginRequiredMixin, FormView):
         if self.request.user.is_authenticated:
             suggestion.user = self.request.user
         suggestion.save()
+        messages.success(self.request, "¡Sugerencia enviada!")
         return super().form_valid(form)
     
     def get_context_data(self, **kwargs):
@@ -189,7 +193,7 @@ class SuggestionView(LoginRequiredMixin, FormView):
         if self.request.user.is_superuser:
             context['suggestions'] = Suggestion.objects.select_related('user').order_by('-created_at')
         return context
-    
+
 
 # Vista del chat
 class ConversationList(LoginRequiredMixin, ListView):
@@ -197,6 +201,7 @@ class ConversationList(LoginRequiredMixin, ListView):
     template_name = 'conversation_list.html'
     context_object_name = 'conversations'
 
+    # Obtiene la conversacion del usuario o todas las conversaciones si es administrador
     def get_queryset(self):
         user = self.request.user
         if user.is_superuser:
@@ -205,21 +210,25 @@ class ConversationList(LoginRequiredMixin, ListView):
             return Conversation.objects.filter(user=user)
 
 
+# Vista del chat de ayuda
 class HelpChat(LoginRequiredMixin, FormView, DetailView):
     template_name = 'help_chat.html'
     model = Conversation
     form_class = HelpMessageForm
     context_object_name = 'conversation'
 
+    # Obtiene el objeto de la conversación, asegurando que el usuario tenga permiso para acceder a ella
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
         if not self.request.user.is_superuser and obj.user != self.request.user:
             raise PermissionDenied()
         return obj
 
+    # Redirige a la conversación específica después de enviar un mensaje
     def get_success_url(self):
         return reverse_lazy('conversation_detail', kwargs={'pk': self.get_object().pk})
-
+    
+    # Maneja el envio del formulario de mensajes en la conversación
     def form_valid(self, form):
         msg = form.save(commit=False)
         msg.sender = self.request.user
@@ -230,13 +239,15 @@ class HelpChat(LoginRequiredMixin, FormView, DetailView):
             msg.recipient = None
         msg.save()
         return super().form_valid(form)
-
+    
+    # Muestra los mensajes de la conversación
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['messages'] = self.get_object().messages.order_by('created_at')
+        context['chat_messages'] = self.get_object().messages.order_by('created_at')
         return context
 
 
+# Vista para redirigir al usuario a su conversación o a la lista de conversaciones si es administrador
 class RedirectToConversation(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         user = request.user
@@ -247,6 +258,7 @@ class RedirectToConversation(LoginRequiredMixin, View):
             return redirect('conversation_detail', pk=conversation.pk)
         
 
+# Manejo de errores personalizados
 def custom_error_view(request, exception=None, status_code=500, message="Ha ocurrido un error"):
     context = {
         "status_code": status_code,

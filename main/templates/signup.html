@@ -2,58 +2,62 @@
 {% load form_filters %}
 {% block extra_scripts %}
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    <script>
-         document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('signup-form');
-            const submitBtn = document.getElementById('submit-btn');
-
-            form.addEventListener('submit', function(event) {
-                const captchaResponse = grecaptcha.getResponse();
-
-                if (captchaResponse.length === 0) {
-                event.preventDefault();
-                alert("Por favor, completa el reCAPTCHA.");
-                return false;
-                }
-
-                submitBtn.disabled = true;
-            });
-         });
-    </script>
 {% endblock %}
 
 {% block title %}Registrarse{% endblock %}
 
 {% block content %}
-    <div class="flex items-center justify-center">
-        <form id="signup-form" method="post" class="p-8 rounded-lg shadow-md w-full max-w-lg" style="background-color: #11111F;">
-            {% csrf_token %}
-            <h2 class="text-white text-2xl font-bold text-center mb-6">Crear Cuenta</h2>
-            <div class="mb-4">
-                <label for="username" class="text-white block text-sm font-medium">Usuario</label>
-                {{ form.username|add_class:"bg-gray-200 block w-full px-4 py-2 mt-1 border border-gray-300 rounded-sm" }}
-            </div>
-            <div class="mb-4">
-                <label for="email" class="text-white block text-sm font-medium">Correo Electrónico</label>
-                {{ form.email|add_class:"bg-gray-200 block w-full px-4 py-2 mt-1 border border-gray-300 rounded-sm" }}
-            </div>
-            <div class="mb-4">
-                <label for="password1" class="text-white block text-sm font-medium">Contraseña</label>
-                {{ form.password1|add_class:"bg-gray-200 block w-full px-4 py-2 mt-1 border border-gray-300 rounded-sm" }}
-            </div>
-            <div class="mb-4">
-                <label for="password2" class="text-white block text-sm font-medium">Confirmar Contraseña</label>
-                {{ form.password2|add_class:"bg-gray-200 block w-full px-4 py-2 mt-1 border border-gray-300 rounded-sm" }}
-            </div>
-            <div class="mb-4">
-                <div class="g-recaptcha" data-sitekey="{{ RECAPTCHA_SITE_KEY }}"></div>
-            </div>
-            <button id="submit-btn" type="submit" class="[background-color:#FFBC0E] w-full font-semibold py-2 px-4 rounded-sm hover:bg-yellow-600">
-                Registrarse
-            </button>
-            <p class="text-white text-center text-sm mt-4">
-                ¿Ya tienes una cuenta? <a href="{% url 'login' %}" class="text-blue-500 hover:underline">Inicia Sesión</a>
-            </p>
-        </form>
-    </div>
+  <div class="flex items-center justify-center">
+    <form id="signup-form" method="post" class="p-8 rounded-lg shadow-md w-full max-w-lg" style="background-color: #11111F;">
+      {% csrf_token %}
+      <h2 class="text-white text-2xl font-bold text-center mb-6">Crear Cuenta</h2>
+
+      <div class="mb-4">
+        <label for="username" class="text-white block text-sm font-medium">Usuario</label>
+        {{ form.username|add_class:"bg-gray-200 block w-full px-4 py-2 mt-1 border border-gray-300 rounded-sm" }}
+        {% for err in form.username.errors %}
+          <p class="text-red-500 text-sm mt-1">{{ err }}</p>
+        {% endfor %}
+      </div>
+
+      <div class="mb-4">
+        <label for="email" class="text-white block text-sm font-medium">Correo Electrónico</label>
+        {{ form.email|add_class:"bg-gray-200 block w-full px-4 py-2 mt-1 border border-gray-300 rounded-sm" }}
+        {% for err in form.email.errors %}
+          <p class="text-red-500 text-sm mt-1">{{ err }}</p>
+        {% endfor %}
+      </div>
+
+      <div class="mb-4">
+        <label for="password1" class="text-white block text-sm font-medium">Contraseña</label>
+        {{ form.password1|add_class:"bg-gray-200 block w-full px-4 py-2 mt-1 border border-gray-300 rounded-sm" }}
+        {% for err in form.password1.errors %}
+          <p class="text-red-500 text-sm mt-1">{{ err }}</p>
+        {% endfor %}
+      </div>
+
+      <div class="mb-4">
+        <label for="password2" class="text-white block text-sm font-medium">Confirmar Contraseña</label>
+        {{ form.password2|add_class:"bg-gray-200 block w-full px-4 py-2 mt-1 border border-gray-300 rounded-sm" }}
+        {% for err in form.password2.errors %}
+          <p class="text-red-500 text-sm mt-1">{{ err }}</p>
+        {% endfor %}
+      </div>
+
+      <div class="mb-4">
+        <div class="g-recaptcha" data-sitekey="{{ RECAPTCHA_SITE_KEY }}"></div>
+      </div>
+
+      <button id="submit-btn"
+              type="submit"
+              class="[background-color:#FFBC0E] w-full font-semibold py-2 px-4 rounded-sm hover:bg-yellow-600">
+        Registrarse
+      </button>
+
+      <p class="text-white text-center text-sm mt-4">
+        ¿Ya tienes una cuenta?
+        <a href="{% url 'login' %}" class="text-blue-500 hover:underline">Inicia Sesión</a>
+      </p>
+    </form>
+  </div>
 {% endblock %}
