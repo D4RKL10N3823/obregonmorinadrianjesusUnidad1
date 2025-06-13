@@ -18,7 +18,7 @@ if DEBUG:
 
 INSECURE_MEDIA = True
 
-ALLOWED_HOSTS = ['localhost']
+ALLOWED_HOSTS = ['localhost','127.0.0.1']
 
 AUTH_USER_MODEL = 'main.User'
 
@@ -132,8 +132,8 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-RECAPTCHA_SITE_KEY = '6Le-QlorAAAAACsXPf49JdjtXseatTrWfkHnIHFo'
-RECAPTCHA_SECRET_KEY = '6Le-QlorAAAAAM0Q2nbVSlvuZj8n_n2_rlIXumkw'
+RECAPTCHA_SITE_KEY = 'tXseatTrWfkHnIHFo'
+RECAPTCHA_SECRET_KEY = 'lvuZj8n_n2_rlIXumk'
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 

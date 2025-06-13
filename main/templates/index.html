@@ -5,8 +5,7 @@
 
 {% block content %}
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-        {% if animes %}
-            {% for anime in animes %}
+        {% for anime in animes %}
             <a href="{% url 'anime_detail' anime.title %}" class="w-[210px]">
                 <div class="shadow-md overflow-hidden">
                     <img src="{{ anime.image_card.url }}" alt="{{ anime.title }}" class="h-[300px] object-cover rounded-sm">
@@ -16,14 +15,6 @@
                     </div>
                 </div>
             </a>
-            {% endfor %}
-        {% else %}
-            <div class="col-span-full  items-center justify-center text-center mt-8">
-                <h2 class="text-white text-xl font-semibold mb-2">No se encontraron resultados</h2>
-                <p class="text-gray-400">No hay animes que coincidan con "<strong>{{ search_value }}</strong>"</p>
-                <img src="{% static 'images/not_found.gif' %}" alt="No results" class="mx-auto mt-4 w-22">
-                <a href="{% url 'anime_list' %}" class="inline-block mt-4 hover:underline">Volver a ver todos</a>
-            </div>
-        {% endif %}
+        {% endfor %}
     </div>
 {% endblock %}
